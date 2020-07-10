@@ -1,0 +1,7 @@
+
+export const SET_AUTH_DATA = 'SET_AUTH_DATA';
+export const SIGN_OUT = 'SIGN_OUT';
+
+export const TRANSACTIONS_RECEIVED = 'TRANSACTIONS_RECEIVED';
+
+
