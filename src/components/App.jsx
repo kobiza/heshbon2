@@ -42,9 +42,9 @@ class App extends React.Component {
     render() {
         return (
             <div>
-                <h1>Heshbon 2</h1>
+                <h1>נותנים חשבון</h1>
                 <button onClick={this.props.signOut}>
-                    <span>Sign out</span>
+                    <span>התנתק</span>
                 </button>
                 {getPageContent(this.props.authData)}
             </div>

@@ -1,11 +1,12 @@
 import * as _ from 'lodash';
 
-import { TRANSACTIONS_RECEIVED } from './actionTypes';
+import {TAGS_RECEIVED, TRANSACTIONS_RECEIVED} from './actionTypes';
 
 import * as clientDB from '../../utils/clientDB';
 
 
 const TRANSACTIONS_PATH = 'transactions';
+const TRANSACTIONS_ADDITIONAL_DATA_PATH = 'additionalData';
 
 // const fetchUserTransactions = uid =>
 //     clientDB.read(`${TRANSACTIONS_PATH}/${uid}`)
@@ -19,9 +20,17 @@ const TRANSACTIONS_PATH = 'transactions';
 const fetchAllTransactions = () =>
     clientDB.read(TRANSACTIONS_PATH);
 
+const fetchAllTransactionsAdditionalData = () =>
+    clientDB.read(TRANSACTIONS_ADDITIONAL_DATA_PATH);
+
 export const transactionsReceived = transactions => ({
     type: TRANSACTIONS_RECEIVED,
     transactions
+});
+
+export const updateTags = tags => ({
+    type: TAGS_RECEIVED,
+    tags
 });
 
 // export const transactionsCanceled = (uid, eventId) => ({
@@ -29,16 +38,68 @@ export const transactionsReceived = transactions => ({
 //     uid,
 //     eventId
 // });
+const TRANSACTION_STATUSES = {
+    NEW: 'NEW',
+    CHECKED: 'CHECKED',
+    IRREGULAR: 'IRREGULAR'
+}
+
+const additionalDataDefaults = {
+    tags: {},
+    status: TRANSACTION_STATUSES.NEW
+}
 
 export const fetchTransactions = () => (dispatch, getState) => {
     // const uid = _.get(getState(), ['authData', 'uid']);
     // const isAdmin = _.get(getState(), ['authData', 'isAdmin']);
     // const fetchPromise = isAdmin ? fetchAllTransactions() : fetchUserTransactions(uid);
 
-    return fetchAllTransactions()
-        .then(transactions => {
+    return Promise.all([fetchAllTransactions(), fetchAllTransactionsAdditionalData()])
+        .then(([transactions, transactionsAdditionalData]) => {
+            if (transactionsAdditionalData) {
+                const tagsToAdd = _.map(_.flatMap(_.values(transactionsAdditionalData), data => _.get(data, ['rows'], [])), _data => _.get(_data, ['tags']))
+                const allTags = _.values(_.reduce(tagsToAdd, _.assign, {}))
+                dispatch(updateTags(allTags));
+            }
+
             if (transactions) {
-                dispatch(transactionsReceived(transactions));
+                const flatTransactions = _.flatMap(_.mapValues(transactions, (cardData, cardKey) => _.map(cardData.rows, (transactionData, transactionIndex) => {
+                    //path: `/transactions/${cardKey}/${transactionIndex}/`
+                    const additionalData = _.defaults(_.get(transactionsAdditionalData, [cardKey, 'rows', transactionIndex], {}), additionalDataDefaults)
+                    return Object.assign({}, transactionData, {cardKey, transactionIndex}, additionalData)
+                })))
+                dispatch(transactionsReceived(flatTransactions));
+            }
+        });
+};
+
+const updateTransactionsAdditionalData = (additionalDataTitle) => (cardKey, index, data ) => {
+    clientDB.setIn(`/additionalData/${cardKey}/rows/${index}/${additionalDataTitle}/`, data)
+}
+
+export const updateRecordTags = updateTransactionsAdditionalData('tags')
+export const updateRecordStatus = updateTransactionsAdditionalData('status')
+
+export const updateTagsInDB = () => (dispatch, getState) => {
+    // const uid = _.get(getState(), ['authData', 'uid']);
+    // const isAdmin = _.get(getState(), ['authData', 'isAdmin']);
+    // const fetchPromise = isAdmin ? fetchAllTransactions() : fetchUserTransactions(uid);
+
+    return Promise.all([fetchAllTransactions(), fetchAllTransactionsAdditionalData()])
+        .then(([transactions, transactionsAdditionalData]) => {
+            if (transactionsAdditionalData) {
+                const tagsToAdd = _.map(_.flatMap(_.values(transactionsAdditionalData), data => _.get(data, ['rows'], [])), _data => _.get(_data, ['tags']))
+                const allTags = _.values(_.reduce(tagsToAdd, _.assign, {}))
+                dispatch(updateTags(allTags));
+            }
+
+            if (transactions) {
+                const flatTransactions = _.flatMap(_.mapValues(transactions, (cardData, cardKey) => _.map(cardData.rows, (transactionData, transactionIndex) => {
+                    //path: `/transactions/${cardKey}/${transactionIndex}/`
+                    const additionalData = _.defaults(_.get(transactionsAdditionalData, [cardKey, 'rows', transactionIndex], {}), additionalDataDefaults)
+                    return Object.assign({}, transactionData, {cardKey, transactionIndex}, additionalData)
+                })))
+                dispatch(transactionsReceived(flatTransactions));
             }
         });
 };

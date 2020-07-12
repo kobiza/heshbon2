@@ -13,7 +13,7 @@ class AuthPage extends React.Component {
         return (
             <div>
                 <button onClick={this.props.loginWithGoogle}>
-                    <span>Google</span>
+                    <span>התחבר</span>
                 </button>
             </div>
         );

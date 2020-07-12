@@ -1,0 +1,26 @@
+html {
+    direction: rtl;
+}
+
+ul {
+    list-style-type: none;
+}
+
+.transaction {
+    display: flex;
+}
+.transaction-name {
+    width: 200px;
+}
+.transaction-date {
+    width: 200px;
+}
+.transaction-amount {
+    width: 100px;
+}
+.transaction-status {
+    width: 100px;
+}
+.transaction-isInIsrael {
+    width: 100px;
+}

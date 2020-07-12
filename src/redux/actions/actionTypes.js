@@ -4,4 +4,6 @@ export const SIGN_OUT = 'SIGN_OUT';
 
 export const TRANSACTIONS_RECEIVED = 'TRANSACTIONS_RECEIVED';
 
+export const TAGS_RECEIVED = 'TAGS_RECEIVED';
+
 
