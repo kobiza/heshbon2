@@ -4,23 +4,71 @@ html {
 
 ul {
     list-style-type: none;
+    padding: 0;
+    margin: 0;
 }
 
 .transaction {
     display: flex;
+    align-items: start;
+    height: 70px;
 }
 .transaction-name {
     width: 200px;
 }
 .transaction-date {
-    width: 200px;
+    width: 100px;
 }
 .transaction-amount {
-    width: 100px;
+    width: 60px;
 }
 .transaction-status {
-    width: 100px;
+    width: 80px;
 }
 .transaction-isInIsrael {
-    width: 100px;
+    width: 50px;
+}
+
+.transaction-tags {
+    width: 330px;
+}
+
+.input-tag {
+    background: white;
+    border: 1px solid #d6d6d6;
+    border-radius: 2px;
+    display: -webkit-box;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 5px;
+}
+
+.input-tag-list {
+    display: flex;
+    align-items: start;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.input-tag-item {
+    align-items: center;
+    background: #85A3BF;
+    border-radius: 2px;
+    color: white;
+    display: flex;
+    margin: 5px;
+    padding: 5px 10px;
+}
+
+.input-tag-item-input-wrapper {
+    background: none;
+    padding: 0;
+    width: 90px;
+    height: 28px;
+}
+
+.input-tag-item-input-wrapper input {
+    border: none;
+    width: 100%;
+    height: 100%;
 }
