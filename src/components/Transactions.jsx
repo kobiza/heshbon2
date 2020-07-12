@@ -29,6 +29,7 @@ class Transactions extends React.Component {
         //
         //     updateRecordTags(cardKey, transactionIndex, updatedTags)
         // }
+        this.handleTagUpdate = (cardKey, transactionIndex, tags) => updateRecordTags(cardKey, transactionIndex, tags)
     }
 
     componentWillMount() {
@@ -37,16 +38,16 @@ class Transactions extends React.Component {
 
     render() {
         // const allTags = this.props.tags
-        const transactions = Object.values(this.props.transactions).map(t => {
-            // const tags = _.map(_.values(t.tags), (tagName) => ({id: tagName, text: tagName}))
+        const transactions = this.props.transactions.map((t, index) => {
+            const tags = _.values(t.tags)
             return (
-                <li className="transaction">
+                <li className="transaction" key={index+ t.name + t.date}>
                     <span className="transaction-name">{t.name}</span>
                     <span className="transaction-date">{t.date}</span>
                     <span className="transaction-amount">{t.amount}</span>
                     <span className="transaction-status">{t.status}</span>
                     <span className="transaction-isInIsrael">{t.isInIsrael.toString()}</span>
-                    <TagsInput/>
+                    <TagsInput tags={tags} onChange={(tags) => this.handleTagUpdate(t.cardKey, t.transactionIndex, tags)}/>
                 </li>
             )
         })

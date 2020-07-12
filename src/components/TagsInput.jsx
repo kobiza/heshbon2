@@ -4,35 +4,35 @@ export default class TagsInput extends React.Component {
     constructor() {
         super();
 
-        this.state = {
-            tags: [
-                'קבוע',
-                'חודשי'
-            ]
-        };
+        // this.state = {
+        //     tags: [
+        //         'קבוע',
+        //         'חודשי'
+        //     ]
+        // };
 
         this.removeTag = (i) => {
-            const newTags = [ ...this.state.tags ];
+            const newTags = [ ...this.props.tags ];
             newTags.splice(i, 1);
-            this.setState({ tags: newTags });
+            this.props.onChange(newTags);
         }
 
         this.inputKeyDown = (e) => {
             const val = e.target.value;
             if (e.key === 'Enter' && val) {
-                if (this.state.tags.find(tag => tag.toLowerCase() === val.toLowerCase())) {
+                if (this.props.tags.find(tag => tag.toLowerCase() === val.toLowerCase())) {
                     return;
                 }
-                this.setState({ tags: [...this.state.tags, val]});
+                this.props.onChange([...this.props.tags, val]);
                 this.tagInput.value = null;
             } else if (e.key === 'Backspace' && !val) {
-                this.removeTag(this.state.tags.length - 1);
+                this.removeTag(this.props.tags.length - 1);
             }
         }
     }
 
     render() {
-        const { tags } = this.state;
+        const { tags } = this.props;
 
         return (
             <div className="transaction-tags input-tag">
