@@ -38,14 +38,15 @@ export const updateTags = tags => ({
 //     uid,
 //     eventId
 // });
-const TRANSACTION_STATUSES = {
+
+export const TRANSACTION_STATUSES = {
     NEW: 'NEW',
     CHECKED: 'CHECKED',
     IRREGULAR: 'IRREGULAR'
 }
 
-const additionalDataDefaults = {
-    tags: {},
+export const additionalDataDefaults = {
+    tags: [],
     status: TRANSACTION_STATUSES.NEW
 }
 
@@ -75,6 +76,10 @@ export const fetchTransactions = () => (dispatch, getState) => {
 
 const updateTransactionsAdditionalData = (additionalDataTitle) => (cardKey, index, data ) => {
     clientDB.setIn(`/additionalData/${cardKey}/rows/${index}/${additionalDataTitle}/`, data)
+}
+
+export const updateCardTransactionsAdditionalData = (cardKey, rowAdditionalData ) => {
+    clientDB.update(`/additionalData/${cardKey}/rows/`, rowAdditionalData)
 }
 
 export const updateRecordTags = updateTransactionsAdditionalData('tags')
