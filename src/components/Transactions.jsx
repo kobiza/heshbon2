@@ -26,32 +26,19 @@ class Transactions extends React.Component {
     constructor(props) {
         super(props);
 
-        //tags: []
-        //isChecked: bool
-        //isSuspicious: bool
         this.state = {
             additionalDataUpdates: {}
         }
-        // this.handleTagDelete = (cardKey, transactionIndex, tags, tagIndex) => {
-        //     const updatedTags = tags.filter((tag, index) => index !== tagIndex)
-        //
-        //     updateRecordTags(cardKey, transactionIndex, updatedTags)
-        // }
-        // this.handleTagAdd = (cardKey, transactionIndex, tags, tag) => {
-        //     const updatedTags = [...tags, tag]
-        //
-        //     updateRecordTags(cardKey, transactionIndex, updatedTags)
-        // }
-        // this.handleTagUpdate = (cardKey, transactionIndex, tags) => updateRecordTags(cardKey, transactionIndex, tags)
-        this.handleDataUpdate = (rowKey, additionalData) => {
-            const prevTags = this.state.additionalDataUpdates[rowKey] ? this.state.additionalDataUpdates[rowKey].tags : []
+
+        this.handleDataUpdate = (rowKey, nextAdditionalData, prevAdditionalData) => {
+            const {tags: prevTags} = prevAdditionalData
 
             const newData = {
-                ...additionalData
+                ...nextAdditionalData
             }
 
-            if (newData.tags.length === 1 && prevTags.length === 0 && newData.status === TRANSACTION_STATUSES.NEW) {
-                newData.status = TRANSACTION_STATUSES.CHECKED
+            if (newData.tags.length === 1 && prevTags.length === 0 && !newData.isRead) {
+                newData.isRead = true
             }
 
             const additionalDataUpdates = {
@@ -80,26 +67,22 @@ class Transactions extends React.Component {
     }
 
     render() {
-        // const allTags = this.props.tags
         const transactions = this.props.transactions.map((t, index) => {
             const key = `${t.cardKey}-${t.transactionIndex}`
             const dataOverrides = this.state.additionalDataUpdates[key] || {}
-            const {isRead, isFishy, tags} = {
+            const currentAdditionalData = {
                 isRead: t.isRead,
-                isFishy: t.isFishy,
                 tags: t.tags,
                 ...dataOverrides
             }
+            const {isRead, tags} = currentAdditionalData
             return (
                 <li className="transaction" key={key}>
+                    <span className="transaction-isRead"><input type="checkbox" tabIndex="-1" checked={isRead} onChange={(event) => this.handleDataUpdate(key, {tags, isRead: event.target.checked}, currentAdditionalData)}/></span>
                     <span className="transaction-name">{t.name}</span>
                     <span className="transaction-date">{t.date}</span>
                     <span className="transaction-amount">{t.amount}</span>
-                    <input className="transaction-isInIsrael" type="checkbox" value={t.isInIsrael}/>
-                    <input className="transaction-isRead" type="checkbox" value={{isRead}}/>
-                    <input className="transaction-isFishy" type="checkbox" value={{isFishy}}/>
-                    <span className="transaction-status">{isFishy}</span>
-                    <TagsInput tags={tags} onChange={(_tags) => this.handleDataUpdate(key, {tags: _tags, status})}/>
+                    <span className="transaction-tags"><TagsInput tags={tags} onChange={(_tags) => this.handleDataUpdate(key, {tags: _tags, isRead}, currentAdditionalData)}/></span>
                 </li>
             )
         })
@@ -109,6 +92,13 @@ class Transactions extends React.Component {
                     <span>שמור</span>
                 </button>
                 <ul className="transactions">
+                    <li className="transaction-head">
+                        <span>נקרא?</span>
+                        <span>שם</span>
+                        <span>תאריך</span>
+                        <span>סכום</span>
+                        <span>קטגוריות</span>
+                    </li>
                     {transactions}
                 </ul>
 

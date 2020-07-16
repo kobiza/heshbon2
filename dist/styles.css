@@ -8,35 +8,48 @@ ul {
     margin: 0;
 }
 
-.transaction {
-    display: flex;
-    align-items: start;
-    height: 70px;
-}
-.transaction-name {
-    width: 200px;
-}
-.transaction-date {
-    width: 100px;
-}
-.transaction-amount {
-    width: 60px;
-}
-.transaction-isRead,
-.transaction-isFishy,
-.transaction-isInIsrael {
-    width: 50px;
+.transaction,
+.transaction-head {
+    position: relative;
+    display: grid;
+    grid-template-columns: 70px 310px 100px 70px 1fr;
+    border-top: 1px solid black;
+    border-left: 1px solid black;
 }
 
+.transaction > span,
+.transaction-head > span {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /*border-bottom: 1px solid black;*/
+    border-right: 1px solid black;
+}
+
+.transaction-head > span {
+    border-bottom: 1px solid black;
+}
+
+.transaction > span.transaction-name {
+    justify-content: start;
+    padding-inline-start: 10px;
+}
 
 .transaction-tags {
-    width: 330px;
+    justify-self: stretch;
+    align-self: stretch;
+}
+
+.transaction-tags > .input-tag {
+    position: relative;
+    width: 100%;
 }
 
 .input-tag {
     background: white;
-    border: 1px solid #d6d6d6;
-    border-radius: 2px;
+    /*border: 1px solid #d6d6d6;*/
+    /*border-radius: 2px;*/
     display: -webkit-box;
     display: flex;
     flex-wrap: wrap;

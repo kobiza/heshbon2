@@ -35,7 +35,7 @@ export default class TagsInput extends React.Component {
         const { tags } = this.props;
 
         return (
-            <div className="transaction-tags input-tag">
+            <div className="input-tag">
                 <ul className="input-tag-list">
                     { tags.map((tag, i) => (
                         <li key={tag} className="input-tag-item" onClick={() => { this.removeTag(i); }}>
