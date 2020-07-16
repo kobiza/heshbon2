@@ -2,7 +2,15 @@
 
 import React from 'react';
 import {connect} from 'react-redux';
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link
+} from "react-router-dom";
+
 import AuthPage from './AuthPage.jsx'
+import Graphs from './Graphs.jsx'
 import Transactions from './Transactions.jsx'
 import {fetchAuthData, signOut} from '../redux/actions/authActions'
 
@@ -18,7 +26,7 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 
-const getPageContent = (authData) => {
+const getHomePageContent = (authData) => {
     if (!authData) {
         return (
             <div>
@@ -34,6 +42,23 @@ const getPageContent = (authData) => {
     );
 }
 
+const getGraphsPageContent = (authData) => {
+    if (!authData) {
+        return (
+            <div>
+                <AuthPage />
+            </div>
+        );
+    }
+
+    return (
+        <div>
+            <Graphs />
+        </div>
+    );
+}
+
+
 class App extends React.Component {
     componentWillMount() {
         this.props.fetchAuthData();
@@ -46,7 +71,28 @@ class App extends React.Component {
                 <button onClick={this.props.signOut}>
                     <span>התנתק</span>
                 </button>
-                {getPageContent(this.props.authData)}
+                <Router>
+                    <nav id="menu">
+                        <ul>
+                            <li>
+                                <Link to="/">טרנזקציות</Link>
+                            </li>
+                            <li>
+                                <Link to="/graphs">גרפים</Link>
+                            </li>
+                        </ul>
+                    </nav>
+
+                    <Switch>
+                        <Route path="/graphs">
+                            {getGraphsPageContent(this.props.authData)}
+                        </Route>
+                        <Route path="/">
+                            {getHomePageContent(this.props.authData)}
+                        </Route>
+                    </Switch>
+                </Router>
+
             </div>
         );
     }

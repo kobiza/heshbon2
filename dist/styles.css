@@ -8,6 +8,8 @@ ul {
     margin: 0;
 }
 
+/*transaction page*/
+
 .transaction,
 .transaction-head {
     position: relative;
@@ -84,4 +86,55 @@ ul {
     border: none;
     width: 100%;
     height: 100%;
+}
+
+
+/*menu*/
+
+#menu {
+    margin: 0;
+    width: auto;
+    background-color: #2980b9;
+    font-size: 16px;
+    font-family: Tahoma, Geneva, sans-serif;
+    font-weight: bold;
+    text-align: right;
+    padding: 8px;
+    border-radius: 8px;
+}
+
+#menu ul {
+    margin: 0;
+    padding: 8px 0;
+    list-style: none;
+    height: auto;
+}
+
+#menu li {
+    display: inline;
+    padding: 8px;
+}
+
+#menu a {
+    color: #FFF;
+    padding: 10px;
+    text-decoration: none;
+}
+
+#menu a:hover {
+    background-color: #3498db;
+    color: #FFF;
+    border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    -o-border-radius: 20px;
+}
+
+#menu li .active {
+    background-color: #3498db;
+    color: #FFF;
+    border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    -o-border-radius: 20px;
 }
