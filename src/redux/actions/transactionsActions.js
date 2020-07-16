@@ -39,15 +39,10 @@ export const updateTags = tags => ({
 //     eventId
 // });
 
-export const TRANSACTION_STATUSES = {
-    NEW: 'NEW',
-    CHECKED: 'CHECKED',
-    IRREGULAR: 'IRREGULAR'
-}
-
 export const additionalDataDefaults = {
     tags: [],
-    status: TRANSACTION_STATUSES.NEW
+    isRead: false,
+    isFishy: false
 }
 
 export const fetchTransactions = () => (dispatch, getState) => {

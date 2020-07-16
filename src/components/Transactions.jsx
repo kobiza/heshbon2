@@ -84,8 +84,9 @@ class Transactions extends React.Component {
         const transactions = this.props.transactions.map((t, index) => {
             const key = `${t.cardKey}-${t.transactionIndex}`
             const dataOverrides = this.state.additionalDataUpdates[key] || {}
-            const {status, tags} = {
-                status: t.status,
+            const {isRead, isFishy, tags} = {
+                isRead: t.isRead,
+                isFishy: t.isFishy,
                 tags: t.tags,
                 ...dataOverrides
             }
@@ -94,8 +95,10 @@ class Transactions extends React.Component {
                     <span className="transaction-name">{t.name}</span>
                     <span className="transaction-date">{t.date}</span>
                     <span className="transaction-amount">{t.amount}</span>
-                    <span className="transaction-isInIsrael">{t.isInIsrael ? 'IL' : 'COM'}</span>
-                    <span className="transaction-status">{status}</span>
+                    <input className="transaction-isInIsrael" type="checkbox" value={t.isInIsrael}/>
+                    <input className="transaction-isRead" type="checkbox" value={{isRead}}/>
+                    <input className="transaction-isFishy" type="checkbox" value={{isFishy}}/>
+                    <span className="transaction-status">{isFishy}</span>
                     <TagsInput tags={tags} onChange={(_tags) => this.handleDataUpdate(key, {tags: _tags, status})}/>
                 </li>
             )

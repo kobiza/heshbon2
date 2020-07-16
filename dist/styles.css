@@ -22,12 +22,12 @@ ul {
 .transaction-amount {
     width: 60px;
 }
-.transaction-status {
-    width: 80px;
-}
+.transaction-isRead,
+.transaction-isFishy,
 .transaction-isInIsrael {
     width: 50px;
 }
+
 
 .transaction-tags {
     width: 330px;
