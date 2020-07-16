@@ -4,10 +4,7 @@ import {connect} from 'react-redux';
 import TagsInput from './TagsInput.jsx'
 import {
     fetchTransactions,
-    updateRecordTags,
     updateCardTransactionsAdditionalData,
-    additionalDataDefaults,
-    TRANSACTION_STATUSES
 } from '../redux/actions/transactionsActions'
 
 function mapStateToProps(state) {
