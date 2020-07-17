@@ -68,9 +68,11 @@ class App extends React.Component {
         return (
             <div>
                 <h1>נותנים חשבון</h1>
-                <button onClick={this.props.signOut}>
-                    <span>התנתק</span>
-                </button>
+                {this.props.authData && (
+                    <button className="logout-button" onClick={this.props.signOut}>
+                        <span>התנתק</span>
+                    </button>
+                )}
                 <Router>
                     <nav id="menu">
                         <ul>

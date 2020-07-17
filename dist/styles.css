@@ -8,6 +8,15 @@ ul {
     margin: 0;
 }
 
+/*master*/
+
+.logout-button,
+.login-button {
+    position: fixed;
+    top: 32px;
+    left: 10px;
+}
+
 /*transaction page*/
 
 .transaction,
@@ -86,6 +95,18 @@ ul {
     border: none;
     width: 100%;
     height: 100%;
+}
+
+/*graphs*/
+
+.graphs-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.recharts-wrapper {
+    direction: ltr;
 }
 
 

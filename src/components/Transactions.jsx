@@ -89,13 +89,15 @@ class Transactions extends React.Component {
                     <span>שמור</span>
                 </button>
                 <ul className="transactions">
-                    <li className="transaction-head">
-                        <span>נקרא?</span>
-                        <span>שם</span>
-                        <span>תאריך</span>
-                        <span>סכום</span>
-                        <span>קטגוריות</span>
-                    </li>
+                    {this.props.transactions.length > 0 && (
+                        <li className="transaction-head">
+                            <span>נקרא?</span>
+                            <span>שם</span>
+                            <span>תאריך</span>
+                            <span>סכום</span>
+                            <span>קטגוריות</span>
+                        </li>
+                    )}
                     {transactions}
                 </ul>
 
