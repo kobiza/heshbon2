@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import React, { Component } from 'react';
-import BarChart from './BarChart.jsx'
+import BarChart from '../graphs/BarChart.jsx'
 
 
 const getTransactionMonth = t => t.date.slice(-7)

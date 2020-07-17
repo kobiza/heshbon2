@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Graph1 from './Graph1.jsx'
+import Graph1 from './customGraphs/Graph1.jsx'
 import {connect} from "react-redux";
 
 function mapStateToProps(state) {
