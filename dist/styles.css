@@ -38,6 +38,11 @@ ul {
     border-right: 1px solid black;
 }
 
+.transaction.has-changes,
+.transaction.has-changes .input-tag-item-input-wrapper input {
+    background: #ecf0f1;
+}
+
 .transaction-head > span {
     border-bottom: 1px solid black;
 }
@@ -58,9 +63,6 @@ ul {
 }
 
 .input-tag {
-    background: white;
-    /*border: 1px solid #d6d6d6;*/
-    /*border-radius: 2px;*/
     display: -webkit-box;
     display: flex;
     flex-wrap: wrap;

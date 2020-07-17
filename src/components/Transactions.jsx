@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import React from 'react';
+import classNames from 'classnames'
 import {connect} from 'react-redux';
 import TagsInput from './TagsInput.jsx'
 import {
@@ -24,10 +25,15 @@ class Transactions extends React.Component {
         super(props);
 
         this.state = {
-            additionalDataUpdates: {}
+            additionalDataUpdates: {},
+            showRead: false
         }
 
-        this.handleDataUpdate = (rowKey, nextAdditionalData, prevAdditionalData) => {
+        this.togglesSowRead = (showRead) => {
+            this.setState({showRead})
+        }
+
+        this.handleDataUpdate = (rowKey, nextAdditionalData, prevAdditionalData, initAdditionalData) => {
             const {tags: prevTags} = prevAdditionalData
 
             const newData = {
@@ -40,7 +46,7 @@ class Transactions extends React.Component {
 
             const additionalDataUpdates = {
                 ...this.state.additionalDataUpdates,
-                [rowKey]: newData
+                [rowKey]: _.isEqual(newData, initAdditionalData) ? {} : newData
             }
             this.setState({additionalDataUpdates})
         }
@@ -67,27 +73,34 @@ class Transactions extends React.Component {
         const transactions = this.props.transactions.map((t, index) => {
             const key = `${t.cardKey}-${t.transactionIndex}`
             const dataOverrides = this.state.additionalDataUpdates[key] || {}
-            const currentAdditionalData = {
+            const hasChanges = !_.isEmpty(dataOverrides)
+            const initAdditionalData = {
                 isRead: t.isRead,
                 tags: t.tags,
+            }
+            const currentAdditionalData = {
+                ...initAdditionalData,
                 ...dataOverrides
             }
             const {isRead, tags} = currentAdditionalData
             return (
-                <li className="transaction" key={key}>
-                    <span className="transaction-isRead"><input type="checkbox" tabIndex="-1" checked={isRead} onChange={(event) => this.handleDataUpdate(key, {tags, isRead: event.target.checked}, currentAdditionalData)}/></span>
+                <li className={classNames("transaction", {'has-changes': hasChanges})} key={key}>
+                    <span className="transaction-isRead"><input type="checkbox" tabIndex="-1" checked={isRead} onChange={(event) => this.handleDataUpdate(key, {tags, isRead: event.target.checked}, currentAdditionalData, initAdditionalData)}/></span>
                     <span className="transaction-name">{t.name}</span>
                     <span className="transaction-date">{t.date}</span>
                     <span className="transaction-amount">{t.amount}</span>
-                    <span className="transaction-tags"><TagsInput tags={tags} onChange={(_tags) => this.handleDataUpdate(key, {tags: _tags, isRead}, currentAdditionalData)}/></span>
+                    <span className="transaction-tags"><TagsInput tags={tags} onChange={(_tags) => this.handleDataUpdate(key, {tags: _tags, isRead}, currentAdditionalData, initAdditionalData)}/></span>
                 </li>
             )
         })
         return (
             <div>
-                <button onClick={this.saveChanges}>
-                    <span>שמור</span>
-                </button>
+                <div className="toolbar">
+                    <button onClick={this.saveChanges}>
+                        <span>שמור</span>
+                    </button>
+                    <input type="checkbox" checked={this.state.showRead} onChange={event => this.togglesSowRead(event.target.checked)}/>
+                </div>
                 <ul className="transactions">
                     {this.props.transactions.length > 0 && (
                         <li className="transaction-head">
