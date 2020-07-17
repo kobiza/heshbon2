@@ -9,10 +9,9 @@ import {
     Link
 } from "react-router-dom";
 
-import AuthPage from './AuthPage.jsx'
 import Graphs from './Graphs.jsx'
 import Transactions from './Transactions.jsx'
-import {fetchAuthData, signOut} from '../redux/actions/authActions'
+import {loginWithGoogle, fetchAuthData, signOut} from '../redux/actions/authActions'
 
 function mapStateToProps(state) {
     return {
@@ -22,42 +21,9 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = (dispatch) => ({
     fetchAuthData: () => dispatch(fetchAuthData()),
+    loginWithGoogle: () => dispatch(loginWithGoogle()),
     signOut: () => dispatch(signOut())
 });
-
-
-const getHomePageContent = (authData) => {
-    if (!authData) {
-        return (
-            <div>
-                <AuthPage />
-            </div>
-        );
-    }
-
-    return (
-        <div>
-            <Transactions />
-        </div>
-    );
-}
-
-const getGraphsPageContent = (authData) => {
-    if (!authData) {
-        return (
-            <div>
-                <AuthPage />
-            </div>
-        );
-    }
-
-    return (
-        <div>
-            <Graphs />
-        </div>
-    );
-}
-
 
 class App extends React.Component {
     componentWillMount() {
@@ -67,30 +33,36 @@ class App extends React.Component {
     render() {
         return (
             <div>
-                <h1>נותנים חשבון</h1>
-                {this.props.authData && (
-                    <button className="logout-button" onClick={this.props.signOut}>
-                        <span>התנתק</span>
-                    </button>
-                )}
                 <Router>
-                    <nav id="menu">
-                        <ul>
-                            <li>
-                                <Link to="/">טרנזקציות</Link>
-                            </li>
-                            <li>
-                                <Link to="/graphs">גרפים</Link>
-                            </li>
-                        </ul>
-                    </nav>
+                    <header>
+                        <nav id="menu">
+                            <ul>
+                                <li>
+                                    <Link to="/">טרנזקציות</Link>
+                                </li>
+                                <li>
+                                    <Link to="/graphs">גרפים</Link>
+                                </li>
+                            </ul>
+                        </nav>
+                        {!this.props.authData && (
+                            <button className="login-button" onClick={this.props.loginWithGoogle}>
+                                <span>התחבר</span>
+                            </button>
+                        )}
+                        {this.props.authData && (
+                            <button className="logout-button" onClick={this.props.signOut}>
+                                <span>התנתק</span>
+                            </button>
+                        )}
+                    </header>
 
                     <Switch>
                         <Route path="/graphs">
-                            {getGraphsPageContent(this.props.authData)}
+                            {this.props.authData && <Graphs/>}
                         </Route>
                         <Route path="/">
-                            {getHomePageContent(this.props.authData)}
+                            {this.props.authData && <Transactions/>}
                         </Route>
                     </Switch>
                 </Router>

@@ -11,11 +11,13 @@ ul {
 }
 
 /*master*/
-
+header {
+    position: relative;
+}
 .logout-button,
 .login-button {
-    position: fixed;
-    top: 32px;
+    position: absolute;
+    top: 15px;
     left: 10px;
 }
 
@@ -103,6 +105,34 @@ ul {
     border: none;
     width: 100%;
     height: 100%;
+}
+
+.save-button {
+    position: fixed;
+    bottom: 40px;
+    left: 40px;
+    background: black;
+    border: 3px solid #343436;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    padding: 10px 16px;
+    font-size: 15px;
+}
+
+.save-button:hover {
+    background: #4d4d50;
+}
+
+.save-button:before {
+    background: #fedd31;
+    display: block;
+    content: '';
+    height: 2px;
+    position: absolute;
+    left: 3px;
+    top: 3px;
+    width: calc(100% - 6px);
 }
 
 /*toolbar*/

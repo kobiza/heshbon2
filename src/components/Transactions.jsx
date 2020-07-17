@@ -148,11 +148,6 @@ class Transactions extends React.Component {
             <div>
                 <div className="toolbar">
                     <div className="row-4-inputs">
-                        <button onClick={this.saveChanges}>
-                            <span>שמור</span>
-                        </button>
-                    </div>
-                    <div className="row-4-inputs">
                         <div className="input-box with-top-label">
                             <label className="date-label" htmlFor="start-month">מחודש</label>
                             <input id="start-month" type="month" value={this.state.startMonth} onChange={event => this.updateStartMonth(event.target.value)}/>
@@ -189,7 +184,7 @@ class Transactions extends React.Component {
                     )}
                     {this.props.transactions.length > 0 && _.isEmpty(transactionsToShow) ? emptyLine : transactions}
                 </ul>
-
+                <button className="save-button" onClick={this.saveChanges}>☁️ שמור</button>
             </div>
         );
     }
