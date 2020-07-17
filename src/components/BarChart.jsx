@@ -1,7 +1,14 @@
+import _ from 'lodash';
 import React, { PureComponent } from 'react';
 import {
     BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
 } from 'recharts';
+
+const getBars = ({bars}) => {
+    return _.map(bars, ({dataKey, name, color, stackId}) => (
+        <Bar dataKey={dataKey} name={name} fill={color} stackId={stackId}/>
+    ))
+}
 
 export default class Example extends PureComponent {
 
@@ -16,14 +23,11 @@ export default class Example extends PureComponent {
                 }}
             >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
+                <XAxis dataKey={this.props.groupKey} />
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Bar dataKey="קבועות" fill="#ffc658" />
-                <Bar dataKey="חדפ" stackId="a" fill="#8884d8" />
-                <Bar dataKey="משתנות" stackId="a" fill="#82ca9d" />
-                <Bar dataKey="לא ידוע" fill="#95a5a6" />
+                {getBars(this.props)}
             </BarChart>
         );
     }

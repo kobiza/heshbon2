@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import AreaChart from './AreaChart.jsx'
 import BarChart from './BarChart.jsx'
 import {connect} from "react-redux";
+import {Bar} from "recharts";
 
 // const data = [
 //     {
@@ -38,18 +39,18 @@ const getTransactionMonth = t => t.date.slice(-7)
 // use obj has instead of array some
 const getTransactionCategory = t => {
     if (_.some(t.tags, tagName => tagName === 'קבועות')) {
-        return 'קבועות'
+        return 'fixed'
     }
 
     if (_.some(t.tags, tagName => tagName === 'משתנות')) {
         if (_.some(t.tags, tagName => tagName === 'חדפ')) {
-            return 'חדפ'
+            return 'variable_once'
         }
 
-        return 'משתנות'
+        return 'variable'
     }
 
-    return 'לא ידוע'
+    return 'unknown'
 }
 
 class Graphs extends Component {
@@ -60,10 +61,10 @@ class Graphs extends Component {
             const monthCategories = _.groupBy(monthTransactions, getTransactionCategory)
 
             return _.defaults(monthCategories, {
-                'קבועות': [],
-                'חדפ': [],
-                'משתנות': [],
-                'לא ידוע': [],
+                'fixed': [],
+                'variable_once': [],
+                'variable': [],
+                'unknown': [],
             })
         })
 
@@ -77,9 +78,39 @@ class Graphs extends Component {
         })
 
         const data = _.values(dataObj)
+            // <Bar dataKey="קבועות" name="cl" fill="#ffc658" />
+            // <Bar dataKey="חדפ" stackId="a" fill="#8884d8" />
+            // <Bar dataKey="משתנות" stackId="a" fill="#82ca9d" />
+            // <Bar dataKey="לא ידוע" fill="#95a5a6" />
+        const bars = [
+            {
+                dataKey: 'fixed',
+                name: 'קבועות',
+                color: '#ffc658',
+                stackId: undefined
+            },
+            {
+                dataKey: 'variable_once',
+                name: 'חדפ',
+                color: '#8884d8',
+                stackId: 'variable'
+            },
+            {
+                dataKey: 'variable',
+                name: 'משתנות',
+                color: '#82ca9d',
+                stackId: 'variable'
+            },
+            {
+                dataKey: 'unknown',
+                name: 'לא ידוע',
+                color: '#95a5a6',
+                stackId: undefined
+            },
+        ]
         return (
             <div className="graphs-page">
-                <BarChart data={data}></BarChart>
+                <BarChart data={data} groupKey="month" bars={bars}></BarChart>
             </div>
         );
     }
