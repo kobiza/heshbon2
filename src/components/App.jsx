@@ -9,7 +9,8 @@ import {
     Link
 } from "react-router-dom";
 
-import Graphs from './Graphs.jsx'
+import FixedAndVariableCostsGraphs from './FixedAndVariableCostsGraphs.jsx'
+import MonthCostsGraphs from './MonthCostsGraphs.jsx'
 import Transactions from './Transactions.jsx'
 import {loginWithGoogle, fetchAuthData, signOut} from '../redux/actions/authActions'
 
@@ -41,7 +42,10 @@ class App extends React.Component {
                                     <Link to="/">טרנזקציות</Link>
                                 </li>
                                 <li>
-                                    <Link to="/graphs">גרפים</Link>
+                                    <Link to="/fixedAndVariableCostsGraphs">גרף קממ</Link>
+                                </li>
+                                <li>
+                                    <Link to="/monthCostsGraphs">גרף חודשים</Link>
                                 </li>
                             </ul>
                         </nav>
@@ -58,8 +62,11 @@ class App extends React.Component {
                     </header>
 
                     <Switch>
-                        <Route path="/graphs">
-                            {this.props.authData && <Graphs/>}
+                        <Route path="/fixedAndVariableCostsGraphs">
+                            {this.props.authData && <FixedAndVariableCostsGraphs/>}
+                        </Route>
+                        <Route path="/monthCostsGraphs">
+                            {this.props.authData && <MonthCostsGraphs/>}
                         </Route>
                         <Route path="/">
                             {this.props.authData && <Transactions/>}

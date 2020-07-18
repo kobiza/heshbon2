@@ -3,31 +3,11 @@ import React from 'react';
 import classNames from 'classnames'
 import {connect} from 'react-redux';
 import TagsInput from './TagsInput.jsx'
+import {filter} from "../utils/transactionsUtils";
 import {
     fetchTransactions,
     updateCardTransactionsAdditionalData,
 } from '../redux/actions/transactionsActions'
-
-// 'dd/mm/yyyy' -> 'yyyy-mm'
-const toInputMonthFormat = (dbDate) => {
-    const [, month, year] = dbDate.split('/')
-
-    return [year, month].join('-')
-}
-
-const isDateAfter = (dateA, dateB) => new Date(dateA) >= new Date(dateB)
-const isDateBefore = (dateA, dateB) => new Date(dateA) <= new Date(dateB)
-
-const getTagsMap = (transactions) => {
-    return _.reduce(transactions, (acc, transaction, i) => {
-        _.forEach(transaction.tags, tag => {
-            acc[tag] = acc[tag] || {}
-            acc[tag][i] = true
-        })
-
-        return acc
-    }, {})
-}
 
 function mapStateToProps(state) {
     return {
@@ -96,13 +76,6 @@ class Transactions extends React.Component {
 
             _.forEach(cardsTransactionsToUpdate, (cardAdditionalData, cardKey) => updateCardTransactionsAdditionalData(cardKey, cardAdditionalData))
         }
-
-        this.shouldShowItem = (transaction, i, tagsMap) => {
-            return (this.state.showRead || !transaction.isRead) &&
-                (!this.state.startMonth || isDateAfter(toInputMonthFormat(transaction.date), this.state.startMonth)) &&
-                (!this.state.endMonth || isDateBefore(toInputMonthFormat(transaction.date), this.state.endMonth)) &&
-                (_.isEmpty(this.state.tagsFilter) || _.every(this.state.tagsFilter, tag => _.get(tagsMap, [tag, i], false)))
-        }
     }
 
     componentWillMount() {
@@ -110,9 +83,8 @@ class Transactions extends React.Component {
     }
 
     render() {
-        const tagsMap = getTagsMap(this.props.transactions)
-        const transactionsToShow = this.props.transactions
-            .filter((transaction, i) => this.shouldShowItem(transaction, i, tagsMap))
+        const filterOptions = _.pick(this.state, ['showRead', 'startMonth', 'endMonth', 'tagsFilter'])
+        const transactionsToShow = filter(this.props.transactions, filterOptions)
         const transactions = transactionsToShow
             .map((t, index) => {
                 const key = `${t.cardKey}-${t.transactionIndex}`

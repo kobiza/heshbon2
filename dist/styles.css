@@ -138,6 +138,7 @@ header {
 /*toolbar*/
 
 .row-4-inputs,
+.row-1-input,
 .row-1-3-inputs {
     margin: 10px 0;
 }
@@ -146,6 +147,12 @@ header {
     display: grid;
     column-gap: 10px;
     grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.row-1-input {
+    display: grid;
+    column-gap: 10px;
+    grid-template-columns: 1fr;
 }
 
 .row-1-3-inputs {

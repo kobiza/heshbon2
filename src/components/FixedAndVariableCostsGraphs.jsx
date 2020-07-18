@@ -8,7 +8,7 @@ function mapStateToProps(state) {
     };
 }
 
-class Graphs extends Component {
+class FixedAndVariableCostsGraphs extends Component {
 
     render() {
         return (
@@ -19,4 +19,4 @@ class Graphs extends Component {
     }
 }
 
-export default connect(mapStateToProps)(Graphs);
+export default connect(mapStateToProps)(FixedAndVariableCostsGraphs);

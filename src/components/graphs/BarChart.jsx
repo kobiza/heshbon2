@@ -1,16 +1,16 @@
 import _ from 'lodash';
 import React, { PureComponent } from 'react';
 import {
-    BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+    BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
 } from 'recharts';
 
 const getBars = ({bars}) => {
     return _.map(bars, ({dataKey, name, color, stackId}) => (
-        <Bar dataKey={dataKey} name={name} fill={color} stackId={stackId}/>
+        <Bar key={`bar-${dataKey}`} dataKey={dataKey} name={name} fill={color} stackId={stackId}/>
     ))
 }
 
-export default class Example extends PureComponent {
+export default class MyBarChart extends PureComponent {
 
     render() {
         return (

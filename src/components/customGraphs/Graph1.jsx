@@ -36,7 +36,7 @@ export default class Graph1 extends Component {
         })
 
         const dataObj = _.mapValues(monthCategories, (categories, month) => {
-            const categoriesNumbers = _.mapValues(categories, catTransactions => _.sum(catTransactions.map(t => t.amount)))
+            const categoriesNumbers = _.mapValues(categories, catTransactions => Math.ceil(_.sum(catTransactions.map(t => t.amount))))
 
             return {
                 month,
@@ -72,7 +72,7 @@ export default class Graph1 extends Component {
             },
         ]
         return (
-            <div className="graphs-page">
+            <div className="graph-1">
                 <BarChart data={data} groupKey="month" bars={bars}></BarChart>
             </div>
         );
