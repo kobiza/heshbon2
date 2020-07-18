@@ -33,3 +33,13 @@ export const filter = (transactions, {showRead = true, startMonth = '', endMonth
 
     return transactions.filter(shouldShowItem)
 }
+
+const getDate = (transaction) => {
+    const [day, month, year] = transaction.date.split('/')
+
+    return new Date(year, month, day)
+}
+
+export const sortByDate = (transactions) => {
+    return _.sortBy(transactions, getDate)
+}

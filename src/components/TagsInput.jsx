@@ -1,15 +1,8 @@
 import React from 'react';
 
 export default class TagsInput extends React.Component {
-    constructor() {
-        super();
-
-        // this.state = {
-        //     tags: [
-        //         'קבוע',
-        //         'חודשי'
-        //     ]
-        // };
+    constructor(props) {
+        super(props);
 
         this.removeTag = (i) => {
             const newTags = [ ...this.props.tags ];

@@ -3,7 +3,7 @@ import React from 'react';
 import classNames from 'classnames'
 import {connect} from 'react-redux';
 import TagsInput from './TagsInput.jsx'
-import {filter} from "../utils/transactionsUtils";
+import {filter, sortByDate} from "../utils/transactionsUtils";
 import {
     fetchTransactions,
     updateCardTransactionsAdditionalData,
@@ -84,7 +84,7 @@ class Transactions extends React.Component {
 
     render() {
         const filterOptions = _.pick(this.state, ['showRead', 'startMonth', 'endMonth', 'tagsFilter'])
-        const transactionsToShow = filter(this.props.transactions, filterOptions)
+        const transactionsToShow = sortByDate(filter(this.props.transactions, filterOptions))
         const transactions = transactionsToShow
             .map((t, index) => {
                 const key = `${t.cardKey}-${t.transactionIndex}`

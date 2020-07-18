@@ -244,3 +244,9 @@ header {
     -moz-border-radius: 20px;
     -o-border-radius: 20px;
 }
+
+
+/*month-graphs*/
+.month-graph-toolbar {
+    width: 980px;
+}

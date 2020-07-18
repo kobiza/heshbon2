@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import {connect} from "react-redux";
 import TagsInput from "./TagsInput.jsx";
 import * as _ from "lodash";
-import {filter} from "../utils/transactionsUtils";
+import {filter, sortByDate} from "../utils/transactionsUtils";
 import BarChart from './graphs/BarChart.jsx'
+import TransactionsGrid from './TransactionsGrid.jsx'
 
 const getTransactionMonth = t => t.date.slice(-7)
 
@@ -35,7 +36,8 @@ class MonthCostsGraphs extends Component {
     }
     render() {
         const filterOptions = _.pick(this.state, ['startMonth', 'endMonth', 'tagsFilter'])
-        const transactionsToShow = filter(this.props.transactions, filterOptions)
+        const filteredTransactions = filter(this.props.transactions, filterOptions)
+        const transactionsToShow = sortByDate(filteredTransactions)
         const transactionsInMonth = _.groupBy(transactionsToShow, getTransactionMonth)
         const monthCosts = _.mapValues(transactionsInMonth, (transactions, month) => ({
             month,
@@ -53,7 +55,7 @@ class MonthCostsGraphs extends Component {
 
         return (
             <div className="graphs-page">
-                <div className="toolbar">
+                <div className="toolbar month-graph-toolbar">
                     <div className="row-4-inputs">
                         <div className="input-box with-top-label">
                             <label className="date-label" htmlFor="start-month">מחודש</label>
@@ -76,6 +78,7 @@ class MonthCostsGraphs extends Component {
                     </div>
                 </div>
                 <BarChart data={monthCostsData} groupKey="month" bars={bars}></BarChart>
+                <TransactionsGrid transactions={transactionsToShow}/>
             </div>
         );
     }
