@@ -35,7 +35,7 @@ export default class TagsInput extends React.Component {
                             {tag}
                         </li>
                     ))}
-                    <li className="input-tag-item input-tag-item-input-wrapper"><input type="text" onKeyDown={this.inputKeyDown} ref={c => { this.tagInput = c; }} /></li>
+                    <li className="input-tag-item input-tag-item-input-wrapper"><input tabIndex={this.props.inputTabIndex} type="text" onKeyDown={this.inputKeyDown} ref={c => { this.tagInput = c; }} /></li>
                 </ul>
             </div>
         );

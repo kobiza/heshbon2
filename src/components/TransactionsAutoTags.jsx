@@ -9,6 +9,30 @@ import {
     updateCardTransactionsAdditionalData,
 } from '../redux/actions/transactionsActions'
 
+const toTagsMap = (tags) => {
+    return _.reduce(tags, (acc, tag) => {
+        acc[tag] = true
+        return acc
+    }, {})
+}
+
+const joinTagsMap = (prevTags, newTags) => {
+    if (_.isEmpty(prevTags)) {
+        return newTags
+    }
+    if (_.isEmpty(newTags)) {
+        return prevTags
+    }
+    const allTagsMap = {
+        ...prevTags,
+        ...newTags
+    }
+
+    return _.pickBy(_.mapValues(allTagsMap, (v, tagName) => {
+        return prevTags[tagName] && newTags[tagName]
+    }))
+}
+
 function mapStateToProps(state) {
     return {
         transactions: state.transactions,
@@ -21,7 +45,7 @@ function mapDispatchToProps(dispatch) {
         fetchTransactions: () => dispatch(fetchTransactions()),
     };
 }
-class Transactions extends React.Component {
+class TransactionsAutoTags extends React.Component {
     constructor(props) {
         super(props);
 
@@ -46,20 +70,10 @@ class Transactions extends React.Component {
             this.setState({tagsFilter})
         }
 
-        this.handleDataUpdate = (rowKey, nextAdditionalData, prevAdditionalData, initAdditionalData) => {
-            const {tags: prevTags} = prevAdditionalData
-
-            const newData = {
-                ...nextAdditionalData
-            }
-
-            if (newData.tags.length === 1 && prevTags.length === 0 && !newData.isRead) {
-                newData.isRead = true
-            }
-
+        this.handleDataUpdate = (rowKey, nextAdditionalData, initAdditionalData) => {
             const additionalDataUpdates = {
                 ...this.state.additionalDataUpdates,
-                [rowKey]: _.isEqual(newData, initAdditionalData) ? {} : newData
+                [rowKey]: _.isEqual(nextAdditionalData, initAdditionalData) ? {} : nextAdditionalData
             }
             this.setState({additionalDataUpdates})
         }
@@ -75,6 +89,34 @@ class Transactions extends React.Component {
             }, {})
 
             _.forEach(cardsTransactionsToUpdate, (cardAdditionalData, cardKey) => updateCardTransactionsAdditionalData(cardKey, cardAdditionalData))
+        }
+
+        this.autoTag = () => {
+            const allReadTransactions = this.props.transactions.filter(t => t.isRead)
+            const allUnreadTransactions = this.props.transactions.filter(t => !t.isRead)
+            const allNamesTags = _.reduce(allReadTransactions, (names, t) => {
+                const prevTagsMap = names[t.name] || {}
+                const newTagsMap = toTagsMap(t.tags)
+                names[t.name] = joinTagsMap(prevTagsMap, newTagsMap)
+
+                return names;
+            }, {})
+
+            const allNamesTagsArr = _.mapValues(allNamesTags, tagsMap => _.keys(tagsMap))
+
+            _.forEach(allUnreadTransactions, (t) => {
+                const tagsToAdd = allNamesTagsArr[t.name]
+                if (tagsToAdd) {
+                    const key = `${t.cardKey}-${t.transactionIndex}`
+                    const initAdditionalData = {
+                        isRead: t.isRead,
+                        tags: t.tags,
+                    }
+                    this.handleDataUpdate(key, {tags: tagsToAdd, isRead: false}, initAdditionalData)
+                }
+            })
+
+            console.log(this.state)
         }
     }
 
@@ -101,11 +143,11 @@ class Transactions extends React.Component {
                 const {isRead, tags} = currentAdditionalData
                 return (
                     <li className={classNames("transaction", {'has-changes': hasChanges})} key={key}>
-                        <span className="transaction-isRead"><input type="checkbox" tabIndex="-1" checked={isRead} onChange={(event) => this.handleDataUpdate(key, {tags, isRead: event.target.checked}, currentAdditionalData, initAdditionalData)}/></span>
+                        <span className="transaction-isRead"><input type="checkbox" checked={isRead} onChange={(event) => this.handleDataUpdate(key, {tags, isRead: event.target.checked}, initAdditionalData)}/></span>
                         <span className="transaction-name">{t.name}</span>
                         <span className="transaction-date">{t.date}</span>
                         <span className="transaction-amount">{t.amount}</span>
-                        <span className="transaction-tags"><TagsInput tags={tags} onChange={(_tags) => this.handleDataUpdate(key, {tags: _tags, isRead}, currentAdditionalData, initAdditionalData)}/></span>
+                        <span className="transaction-tags"><TagsInput inputTabIndex="-1" tags={tags} onChange={() => {}}/></span>
                     </li>
                 )
             })
@@ -132,11 +174,7 @@ class Transactions extends React.Component {
                         </div>
 
                     </div>
-                    <div className="row-1-3-inputs">
-                        <div className="input-box show-read">
-                            <input id="showRead" type="checkbox" checked={this.state.showRead} onChange={event => this.togglesSowRead(event.target.checked)}/>
-                            <label htmlFor="showRead">הצג נקראו</label>
-                        </div>
+                    <div className="row-1-input">
                         <div className="input-box with-top-label">
                             <label className="date-label">קטגוריות</label>
                             <TagsInput tags={this.state.tagsFilter} onChange={this.updateTagsFilter}/>
@@ -157,9 +195,10 @@ class Transactions extends React.Component {
                     {this.props.transactions.length > 0 && _.isEmpty(transactionsToShow) ? emptyLine : transactions}
                 </ul>
                 <button className="action-button" onClick={this.saveChanges}>☁️ שמור</button>
+                <button className="action-button auto-tag-button" onClick={this.autoTag}>הצע</button>
             </div>
         );
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Transactions);
+export default connect(mapStateToProps, mapDispatchToProps)(TransactionsAutoTags);

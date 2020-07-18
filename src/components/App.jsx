@@ -12,6 +12,7 @@ import {
 import FixedAndVariableCostsGraphs from './FixedAndVariableCostsGraphs.jsx'
 import MonthCostsGraphs from './MonthCostsGraphs.jsx'
 import Transactions from './Transactions.jsx'
+import TransactionsAutoTags from './TransactionsAutoTags.jsx'
 import {loginWithGoogle, fetchAuthData, signOut} from '../redux/actions/authActions'
 
 function mapStateToProps(state) {
@@ -47,6 +48,9 @@ class App extends React.Component {
                                 <li>
                                     <Link to="/monthCostsGraphs">גרף חודשים</Link>
                                 </li>
+                                <li>
+                                    <Link to="/TransactionsAutoTags">אוטוטאג</Link>
+                                </li>
                             </ul>
                         </nav>
                         {!this.props.authData && (
@@ -67,6 +71,9 @@ class App extends React.Component {
                         </Route>
                         <Route path="/monthCostsGraphs">
                             {this.props.authData && <MonthCostsGraphs/>}
+                        </Route>
+                        <Route path="/TransactionsAutoTags">
+                            {this.props.authData && <TransactionsAutoTags/>}
                         </Route>
                         <Route path="/">
                             {this.props.authData && <Transactions/>}

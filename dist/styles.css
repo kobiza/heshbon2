@@ -107,7 +107,7 @@ header {
     height: 100%;
 }
 
-.save-button {
+.action-button {
     position: fixed;
     bottom: 40px;
     left: 40px;
@@ -120,11 +120,15 @@ header {
     font-size: 15px;
 }
 
-.save-button:hover {
+.auto-tag-button {
+    left: 200px;
+}
+
+.action-button:hover {
     background: #4d4d50;
 }
 
-.save-button:before {
+.action-button:before {
     background: #fedd31;
     display: block;
     content: '';
