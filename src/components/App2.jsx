@@ -188,6 +188,16 @@ class App2 extends React.Component {
                             </IconButton>
                             <PageTitle classes={classes.title}/>
                         </Toolbar>
+                        {!this.props.authData && (
+                            <button className="login-button" onClick={this.props.loginWithGoogle}>
+                                <span>התחבר</span>
+                            </button>
+                        )}
+                        {this.props.authData && (
+                            <button className="logout-button" onClick={this.props.signOut}>
+                                <span>התנתק</span>
+                            </button>
+                        )}
                     </AppBar>
                     <Drawer
                         variant="permanent"

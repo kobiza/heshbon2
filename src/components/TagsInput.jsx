@@ -12,6 +12,9 @@ const styles = (theme) => ({
             margin: theme.spacing(0.5),
         },
     },
+    tag: {
+        height: 27
+    }
 });
 
 
@@ -41,14 +44,14 @@ class TagsInput extends React.Component {
     }
 
     render() {
-        const { tags, classes } = this.props;
+        const { tags, classes, chipColor = 'primary' } = this.props;
 
         return (
             <div className="input-tag">
                 <ul className={classes.tags}>
                     { tags.map((tag, i) => (
                         <li key={tag} onClick={() => { this.removeTag(i); }}>
-                            <Chip label={tag} />
+                            <Chip className={classes.tag} label={tag} color={chipColor}/>
                         </li>
                     ))}
                     <li className="input-tag-item input-tag-item-input-wrapper"><input tabIndex={this.props.inputTabIndex} type="text" list="tag-list" onKeyDown={this.inputKeyDown} ref={c => { this.tagInput = c; }} /></li>

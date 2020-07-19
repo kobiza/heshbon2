@@ -9,6 +9,50 @@ import {
     updateCardTransactionsAdditionalData,
 } from '../redux/actions/transactionsActions'
 
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Fab from '@material-ui/core/Fab';
+import SaveIcon from '@material-ui/icons/Save';
+import Paper from '@material-ui/core/Paper';
+import { lighten, withStyles } from '@material-ui/core/styles';
+import clsx from "clsx";
+
+
+//70px 310px 100px 70px 1fr
+const styles = theme => ({
+    readColumn: {
+        width: 70
+    },
+    nameColumn: {
+        width: 310
+    },
+    dateColumn: {
+        width: 70
+    },
+    amountColumn: {
+        width: 70
+    },
+    saveButton: {
+        position: 'fixed',
+        bottom: 40,
+        left: 40,
+    },
+    // margin: {
+    //     margin: theme.spacing(1)
+    // },
+    extendedIcon: {
+        margin: theme.spacing(1)
+    },
+    highlight: {
+        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+    }
+})
+
+
 function mapStateToProps(state) {
     return {
         transactions: state.transactions,
@@ -83,13 +127,15 @@ class Transactions extends React.Component {
     }
 
     render() {
+        const { classes } = this.props
         const filterOptions = _.pick(this.state, ['showRead', 'startMonth', 'endMonth', 'tagsFilter'])
         const transactionsToShow = sortByDate(filter(this.props.transactions, filterOptions))
-        const transactions = transactionsToShow
+
+        const transactions2 = transactionsToShow
             .map((t, index) => {
                 const key = `${t.cardKey}-${t.transactionIndex}`
                 const dataOverrides = this.state.additionalDataUpdates[key] || {}
-                const hasChanges = !_.isEmpty(dataOverrides)
+                const highlight = !_.isEmpty(dataOverrides)
                 const initAdditionalData = {
                     isRead: t.isRead,
                     tags: t.tags,
@@ -100,13 +146,13 @@ class Transactions extends React.Component {
                 }
                 const {isRead, tags} = currentAdditionalData
                 return (
-                    <li className={classNames("transaction", {'has-changes': hasChanges})} key={key}>
-                        <span className="transaction-isRead"><input type="checkbox" tabIndex="-1" checked={isRead} onChange={(event) => this.handleDataUpdate(key, {tags, isRead: event.target.checked}, currentAdditionalData, initAdditionalData)}/></span>
-                        <span className="transaction-name">{t.name}</span>
-                        <span className="transaction-date">{t.date}</span>
-                        <span className="transaction-amount">{t.amount}</span>
-                        <span className="transaction-tags"><TagsInput tags={tags} onChange={(_tags) => this.handleDataUpdate(key, {tags: _tags, isRead}, currentAdditionalData, initAdditionalData)}/></span>
-                    </li>
+                    <TableRow key={key} className={clsx(highlight && classes.highlight)}>
+                        <TableCell align="right"><span><input type="checkbox" tabIndex="-1" checked={isRead} onChange={(event) => this.handleDataUpdate(key, {tags, isRead: event.target.checked}, currentAdditionalData, initAdditionalData)}/></span></TableCell>
+                        <TableCell align="right"><span>{t.name}</span></TableCell>
+                        <TableCell align="right"><span>{t.date}</span></TableCell>
+                        <TableCell align="right"><span>{t.amount}</span></TableCell>
+                        <TableCell align="right"><span><TagsInput chipColor={highlight ? 'secondary' : 'primary'} tags={tags} onChange={(_tags) => this.handleDataUpdate(key, {tags: _tags, isRead}, currentAdditionalData, initAdditionalData)}/></span></TableCell>
+                    </TableRow>
                 )
             })
 
@@ -151,22 +197,36 @@ class Transactions extends React.Component {
 
                     </div>
                 </div>
-                <ul className="transactions">
-                    {this.props.transactions.length > 0 && (
-                        <li className="transaction-head">
-                            <span>נקרא?</span>
-                            <span>שם</span>
-                            <span>תאריך</span>
-                            <span>סכום</span>
-                            <span>קטגוריות</span>
-                        </li>
-                    )}
-                    {this.props.transactions.length > 0 && _.isEmpty(transactionsToShow) ? emptyLine : transactions}
-                </ul>
-                <button className="action-button" onClick={this.saveChanges}>☁️ שמור</button>
+
+                {this.props.transactions.length > 0 && (
+                    <TableContainer component={Paper}>
+                        <Table >
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell className={classes.readColumn}>נקרא</TableCell>
+                                    <TableCell className={classes.nameColumn} align="right">שם</TableCell>
+                                    <TableCell className={classes.dateColumn} align="right">תאריך</TableCell>
+                                    <TableCell className={classes.amountColumn} align="right">סכום</TableCell>
+                                    <TableCell align="right">קטגוריות</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {transactions2}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                )}
+                <Fab
+                    color="secondary"
+                    aria-label="save"
+                    className={classes.saveButton}
+                >
+                    <SaveIcon className={classes.extendedIcon} />
+                </Fab>
+                {/*<button className="action-button" onClick={this.saveChanges}>☁️ שמור</button>*/}
             </div>
         );
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Transactions);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Transactions));
