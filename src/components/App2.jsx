@@ -4,11 +4,13 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
-    LinkZ, Link
+    Link
 } from "react-router-dom";
 
+import { ROUTES } from '../utils/consts'
 import FixedAndVariableCostsGraphs from './FixedAndVariableCostsGraphs.jsx'
 import MonthCostsGraphs from './MonthCostsGraphs.jsx'
+import PageTitle from './PageTitle.jsx'
 import Transactions from './Transactions.jsx'
 import TransactionsAutoTags from './TransactionsAutoTags.jsx'
 import {loginWithGoogle, fetchAuthData, signOut} from '../redux/actions/authActions'
@@ -19,7 +21,6 @@ import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import Container from '@material-ui/core/Container';
@@ -185,9 +186,7 @@ class App2 extends React.Component {
                             >
                                 <MenuIcon />
                             </IconButton>
-                            <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-                                תנועות
-                            </Typography>
+                            <PageTitle classes={classes.title}/>
                         </Toolbar>
                     </AppBar>
                     <Drawer
@@ -209,25 +208,25 @@ class App2 extends React.Component {
                                     <ListItemIcon>
                                         <FormatListNumberedRtlIcon />
                                     </ListItemIcon>
-                                    <ListItemText primary="תנועות" />
+                                    <ListItemText primary={ROUTES["/"]} />
                                 </ListItem>
                                 <ListItem button className={classes.menuItem} component={link2}>
                                     <ListItemIcon>
                                         <BarChartIcon />
                                     </ListItemIcon>
-                                    <ListItemText primary="קבועות משתנות" />
+                                    <ListItemText primary={ROUTES["/fixedAndVariableCostsGraphs"]} />
                                 </ListItem>
                                 <ListItem button className={classes.menuItem} component={link3}>
                                     <ListItemIcon>
                                         <TrendingUpIcon />
                                     </ListItemIcon>
-                                    <ListItemText primary="גרף חודשים" />
+                                    <ListItemText primary={ROUTES["/monthCostsGraphs"]} />
                                 </ListItem>
                                 <ListItem button className={classes.menuItem} component={link4}>
                                     <ListItemIcon>
                                         <LocalOfferIcon />
                                     </ListItemIcon>
-                                    <ListItemText primary="אוטוטאג" />
+                                    <ListItemText primary={ROUTES["/transactionsAutoTags"]} />
                                 </ListItem>
                             </div>
                         </List>
