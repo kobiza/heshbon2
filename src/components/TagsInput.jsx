@@ -1,6 +1,22 @@
 import React from 'react';
+import Chip from '@material-ui/core/Chip';
+import {withStyles} from "@material-ui/core";
+import clsx from "clsx";
 
-export default class TagsInput extends React.Component {
+const styles = (theme) => ({
+    tags: {
+        display: 'flex',
+        justifyContent: 'center',
+        flexWrap: 'wrap',
+        '& > *': {
+            margin: theme.spacing(0.5),
+        },
+    },
+});
+
+
+
+class TagsInput extends React.Component {
     constructor(props) {
         super(props);
 
@@ -25,14 +41,14 @@ export default class TagsInput extends React.Component {
     }
 
     render() {
-        const { tags } = this.props;
+        const { tags, classes } = this.props;
 
         return (
             <div className="input-tag">
-                <ul className="input-tag-list">
+                <ul className={classes.tags}>
                     { tags.map((tag, i) => (
-                        <li key={tag} className="input-tag-item" onClick={() => { this.removeTag(i); }}>
-                            {tag}
+                        <li key={tag} onClick={() => { this.removeTag(i); }}>
+                            <Chip label={tag} />
                         </li>
                     ))}
                     <li className="input-tag-item input-tag-item-input-wrapper"><input tabIndex={this.props.inputTabIndex} type="text" onKeyDown={this.inputKeyDown} ref={c => { this.tagInput = c; }} /></li>
@@ -41,3 +57,5 @@ export default class TagsInput extends React.Component {
         );
     }
 }
+
+export default withStyles(styles)(TagsInput)
