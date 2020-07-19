@@ -205,25 +205,25 @@ class App2 extends React.Component {
                         <Divider />
                         <List>
                             <div>
-                                <ListItem className={classes.menuItem} component={link1}>
+                                <ListItem button className={classes.menuItem} component={link1}>
                                     <ListItemIcon>
                                         <FormatListNumberedRtlIcon />
                                     </ListItemIcon>
                                     <ListItemText primary="תנועות" />
                                 </ListItem>
-                                <ListItem className={classes.menuItem} component={link2}>
+                                <ListItem button className={classes.menuItem} component={link2}>
                                     <ListItemIcon>
                                         <BarChartIcon />
                                     </ListItemIcon>
                                     <ListItemText primary="קבועות משתנות" />
                                 </ListItem>
-                                <ListItem className={classes.menuItem} component={link3}>
+                                <ListItem button className={classes.menuItem} component={link3}>
                                     <ListItemIcon>
                                         <TrendingUpIcon />
                                     </ListItemIcon>
                                     <ListItemText primary="גרף חודשים" />
                                 </ListItem>
-                                <ListItem className={classes.menuItem} component={link4}>
+                                <ListItem button className={classes.menuItem} component={link4}>
                                     <ListItemIcon>
                                         <LocalOfferIcon />
                                     </ListItemIcon>
