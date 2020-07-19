@@ -13,7 +13,7 @@ class FixedAndVariableCostsGraphs extends Component {
     render() {
         return (
             <div className="graphs-page">
-                <Graph1 transactions={this.props.transactions}/>
+                <Graph1 transactions={this.props.transactions} style={{width: '100%', height: '300px'}}/>
             </div>
         );
     }

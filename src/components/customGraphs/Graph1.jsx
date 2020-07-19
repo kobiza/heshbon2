@@ -72,7 +72,7 @@ export default class Graph1 extends Component {
             },
         ]
         return (
-            <div className="graph-1">
+            <div className="graph-1" style={this.props.style}>
                 <BarChart data={data} groupKey="month" bars={bars}></BarChart>
             </div>
         );

@@ -77,7 +77,10 @@ class MonthCostsGraphs extends Component {
 
                     </div>
                 </div>
-                <BarChart data={monthCostsData} groupKey="month" bars={bars}></BarChart>
+                <div style={{height: '300px', width: '100%'}}>
+                    <BarChart data={monthCostsData} groupKey="month" bars={bars}></BarChart>
+                </div>
+
                 <TransactionsGrid transactions={transactionsToShow}/>
             </div>
         );
