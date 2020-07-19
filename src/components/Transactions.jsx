@@ -3,7 +3,7 @@ import React from 'react';
 import classNames from 'classnames'
 import {connect} from 'react-redux';
 import TagsInput from './TagsInput.jsx'
-import {filter, sortByDate} from "../utils/transactionsUtils";
+import {filter, sortByDate, getTags} from "../utils/transactionsUtils";
 import {
     fetchTransactions,
     updateCardTransactionsAdditionalData,
@@ -118,6 +118,13 @@ class Transactions extends React.Component {
 
         return (
             <div>
+                { this.props.transactions.length > 0 && (
+                    <datalist id="tag-list">
+                        {getTags(this.props.transactions).map(tag => (
+                            <option key={tag}>{tag}</option>
+                        ))}
+                    </datalist>
+                )}
                 <div className="toolbar">
                     <div className="row-4-inputs">
                         <div className="input-box with-top-label">

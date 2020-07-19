@@ -51,7 +51,7 @@ class TagsInput extends React.Component {
                             <Chip label={tag} />
                         </li>
                     ))}
-                    <li className="input-tag-item input-tag-item-input-wrapper"><input tabIndex={this.props.inputTabIndex} type="text" onKeyDown={this.inputKeyDown} ref={c => { this.tagInput = c; }} /></li>
+                    <li className="input-tag-item input-tag-item-input-wrapper"><input tabIndex={this.props.inputTabIndex} type="text" list="tag-list" onKeyDown={this.inputKeyDown} ref={c => { this.tagInput = c; }} /></li>
                 </ul>
             </div>
         );

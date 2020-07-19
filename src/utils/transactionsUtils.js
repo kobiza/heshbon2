@@ -21,6 +21,8 @@ const getTagsMap = (transactions) => {
     }, {})
 }
 
+export const getTags = (transactions) => Object.keys(getTagsMap(transactions))
+
 
 export const filter = (transactions, {showRead = true, startMonth = '', endMonth = '', tagsFilter = []}) => {
     const tagsMap = getTagsMap(transactions)
