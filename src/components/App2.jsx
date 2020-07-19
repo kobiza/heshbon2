@@ -1,6 +1,19 @@
 import React from 'react';
+import {connect} from 'react-redux';
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    LinkZ, Link
+} from "react-router-dom";
+
+import FixedAndVariableCostsGraphs from './FixedAndVariableCostsGraphs.jsx'
+import MonthCostsGraphs from './MonthCostsGraphs.jsx'
+import Transactions from './Transactions.jsx'
+import TransactionsAutoTags from './TransactionsAutoTags.jsx'
+import {loginWithGoogle, fetchAuthData, signOut} from '../redux/actions/authActions'
 import clsx from 'clsx';
-import { createMuiTheme, ThemeProvider, makeStyles } from '@material-ui/core/styles';
+import { createMuiTheme, ThemeProvider, withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
@@ -9,24 +22,21 @@ import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
-import Link from '@material-ui/core/Link';
+import Container from '@material-ui/core/Container';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import NotificationsIcon from '@material-ui/icons/Notifications';
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import DashboardIcon from '@material-ui/icons/Dashboard';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import PeopleIcon from '@material-ui/icons/People';
+import TrendingUpIcon from '@material-ui/icons/TrendingUp';
+import FormatListNumberedRtlIcon from '@material-ui/icons/FormatListNumberedRtl';
+import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 import BarChartIcon from '@material-ui/icons/BarChart';
-import LayersIcon from '@material-ui/icons/Layers';
 
 const drawerWidth = 240;
 
-const useStyles = makeStyles((theme) => ({
+const styles = theme => ({
     root: {
         display: 'flex',
     },
@@ -107,90 +117,146 @@ const useStyles = makeStyles((theme) => ({
     menuItem: {
         textAlign: 'right'
     }
-}));
+})
 
-export default function Dashboard() {
-    const classes = useStyles();
-    const [open, setOpen] = React.useState(true);
-    const handleDrawerOpen = () => {
-        setOpen(true);
+function mapStateToProps(state) {
+    return {
+        authData: state.authData
     };
-    const handleDrawerClose = () => {
-        setOpen(false);
-    };
-    const theme = createMuiTheme({
-        direction: 'rtl',
-    });
-
-    return (
-        <ThemeProvider theme={theme}>
-
-
-        <div className={classes.root}>
-            <CssBaseline />
-            <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
-                <Toolbar className={classes.toolbar}>
-                    <IconButton
-                        edge="start"
-                        color="inherit"
-                        aria-label="open drawer"
-                        onClick={handleDrawerOpen}
-                        className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-                        Dashboard
-                    </Typography>
-                </Toolbar>
-            </AppBar>
-            <Drawer
-                variant="permanent"
-                classes={{
-                    paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
-                }}
-                open={open}
-            >
-                <div className={classes.toolbarIcon}>
-                    <IconButton onClick={handleDrawerClose}>
-                        <ChevronLeftIcon />
-                    </IconButton>
-                </div>
-                <Divider />
-                <List>
-                    <div>
-                        <ListItem button className={classes.menuItem}>
-                            <ListItemIcon>
-                                <DashboardIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="תנועות" />
-                        </ListItem>
-                        <ListItem button className={classes.menuItem}>
-                            <ListItemIcon>
-                                <ShoppingCartIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="קבועות משתנות" />
-                        </ListItem>
-                        <ListItem button className={classes.menuItem}>
-                            <ListItemIcon>
-                                <PeopleIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="גרף חודשים" />
-                        </ListItem>
-                        <ListItem button className={classes.menuItem}>
-                            <ListItemIcon>
-                                <BarChartIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="אוטוטאג" />
-                        </ListItem>
-                    </div>
-                </List>
-            </Drawer>
-            <main className={classes.content}>
-
-            </main>
-        </div>
-
-        </ThemeProvider>
-    );
 }
+
+const mapDispatchToProps = (dispatch) => ({
+    fetchAuthData: () => dispatch(fetchAuthData()),
+    loginWithGoogle: () => dispatch(loginWithGoogle()),
+    signOut: () => dispatch(signOut())
+});
+
+class App2 extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            open: false
+        }
+
+        this.handleDrawerOpen = () => {
+            this.setState({open: true})
+        }
+
+        this.handleDrawerClose = () => {
+            this.setState({open: false})
+        }
+    }
+    componentWillMount() {
+        this.props.fetchAuthData();
+    }
+
+    render() {
+        const { classes } = this.props
+        const theme = createMuiTheme({
+            direction: 'rtl',
+        });
+        const link1 = React.forwardRef((linkProps, ref) => (
+            <Link ref={ref} to="/" {...linkProps} />
+        ))
+        const link2 = React.forwardRef((linkProps, ref) => (
+            <Link ref={ref} to="/fixedAndVariableCostsGraphs" {...linkProps} />
+        ))
+        const link3 = React.forwardRef((linkProps, ref) => (
+            <Link ref={ref} to="/monthCostsGraphs" {...linkProps} />
+        ))
+        const link4 = React.forwardRef((linkProps, ref) => (
+            <Link ref={ref} to="/transactionsAutoTags" {...linkProps} />
+        ))
+        return (
+            <ThemeProvider theme={theme}>
+                <Router>
+
+                <div className={classes.root}>
+                    <CssBaseline />
+                    <AppBar position="absolute" className={clsx(classes.appBar, this.state.open && classes.appBarShift)}>
+                        <Toolbar className={classes.toolbar}>
+                            <IconButton
+                                edge="start"
+                                color="inherit"
+                                aria-label="open drawer"
+                                onClick={this.handleDrawerOpen}
+                                className={clsx(classes.menuButton, this.state.open && classes.menuButtonHidden)}
+                            >
+                                <MenuIcon />
+                            </IconButton>
+                            <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+                                תנועות
+                            </Typography>
+                        </Toolbar>
+                    </AppBar>
+                    <Drawer
+                        variant="permanent"
+                        classes={{
+                            paper: clsx(classes.drawerPaper, !this.state.open && classes.drawerPaperClose),
+                        }}
+                        open={this.state.open}
+                    >
+                        <div className={classes.toolbarIcon}>
+                            <IconButton onClick={this.handleDrawerClose}>
+                                <ChevronLeftIcon />
+                            </IconButton>
+                        </div>
+                        <Divider />
+                        <List>
+                            <div>
+                                <ListItem className={classes.menuItem} component={link1}>
+                                    <ListItemIcon>
+                                        <FormatListNumberedRtlIcon />
+                                    </ListItemIcon>
+                                    <ListItemText primary="תנועות" />
+                                </ListItem>
+                                <ListItem className={classes.menuItem} component={link2}>
+                                    <ListItemIcon>
+                                        <BarChartIcon />
+                                    </ListItemIcon>
+                                    <ListItemText primary="קבועות משתנות" />
+                                </ListItem>
+                                <ListItem className={classes.menuItem} component={link3}>
+                                    <ListItemIcon>
+                                        <TrendingUpIcon />
+                                    </ListItemIcon>
+                                    <ListItemText primary="גרף חודשים" />
+                                </ListItem>
+                                <ListItem className={classes.menuItem} component={link4}>
+                                    <ListItemIcon>
+                                        <LocalOfferIcon />
+                                    </ListItemIcon>
+                                    <ListItemText primary="אוטוטאג" />
+                                </ListItem>
+                            </div>
+                        </List>
+                    </Drawer>
+                    <main className={classes.content}>
+                        <div className={classes.appBarSpacer} />
+                        <Container maxWidth="lg" className={classes.container}>
+                            <Switch>
+                                <Route path="/fixedAndVariableCostsGraphs">
+                                    {this.props.authData && <FixedAndVariableCostsGraphs/>}
+                                </Route>
+                                <Route path="/monthCostsGraphs">
+                                    {this.props.authData && <MonthCostsGraphs/>}
+                                </Route>
+                                <Route path="/transactionsAutoTags">
+                                    {this.props.authData && <TransactionsAutoTags/>}
+                                </Route>
+                                <Route path="/">
+                                    {this.props.authData && <Transactions/>}
+                                </Route>
+                            </Switch>
+                        </Container>
+
+                    </main>
+                </div>
+                </Router>
+            </ThemeProvider>
+        );
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(App2));
