@@ -18,6 +18,7 @@ import {loginWithGoogle, fetchAuthData, signOut} from '../redux/actions/authActi
 import clsx from 'clsx';
 import { createMuiTheme, ThemeProvider, withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import Button from "@material-ui/core/Button";
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -118,6 +119,11 @@ const styles = theme => ({
     },
     menuItem: {
         textAlign: 'right'
+    },
+    logInOutButton: {
+        position: 'absolute',
+        top: 14,
+        left: 14,
     }
 })
 
@@ -192,14 +198,10 @@ class App2 extends React.Component {
                             <PageTitle classes={classes.title}/>
                         </Toolbar>
                         {!this.props.authData && (
-                            <button className="login-button" onClick={this.props.loginWithGoogle}>
-                                <span>התחבר</span>
-                            </button>
+                            <Button className={classes.logInOutButton} variant="contained" onClick={this.props.loginWithGoogle}>התחבר</Button>
                         )}
                         {this.props.authData && (
-                            <button className="logout-button" onClick={this.props.signOut}>
-                                <span>התנתק</span>
-                            </button>
+                            <Button className={classes.logInOutButton} variant="contained" onClick={this.props.signOut}>התנתק</Button>
                         )}
                     </AppBar>
                     <Drawer
