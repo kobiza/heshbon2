@@ -20,6 +20,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import Paper from '@material-ui/core/Paper';
 import { lighten, withStyles } from '@material-ui/core/styles';
 import clsx from "clsx";
+import TextField from "@material-ui/core/TextField/TextField";
 
 
 //70px 310px 100px 70px 1fr
@@ -39,7 +40,7 @@ const styles = theme => ({
     saveButton: {
         position: 'fixed',
         bottom: 40,
-        left: 40,
+        right: 40,
     },
     // margin: {
     //     margin: theme.spacing(1)
@@ -147,11 +148,11 @@ class Transactions extends React.Component {
                 const {isRead, tags} = currentAdditionalData
                 return (
                     <TableRow key={key} className={clsx(highlight && classes.highlight)}>
-                        <TableCell align="right"><span><input type="checkbox" tabIndex="-1" checked={isRead} onChange={(event) => this.handleDataUpdate(key, {tags, isRead: event.target.checked}, currentAdditionalData, initAdditionalData)}/></span></TableCell>
-                        <TableCell align="right"><span>{t.name}</span></TableCell>
-                        <TableCell align="right"><span>{t.date}</span></TableCell>
-                        <TableCell align="right"><span>{t.amount}</span></TableCell>
-                        <TableCell align="right"><span><TagsInput chipColor={highlight ? 'secondary' : 'primary'} tags={tags} onChange={(_tags) => this.handleDataUpdate(key, {tags: _tags, isRead}, currentAdditionalData, initAdditionalData)}/></span></TableCell>
+                        <TableCell align="left"><span><input type="checkbox" tabIndex="-1" checked={isRead} onChange={(event) => this.handleDataUpdate(key, {tags, isRead: event.target.checked}, currentAdditionalData, initAdditionalData)}/></span></TableCell>
+                        <TableCell align="left"><span>{t.name}</span></TableCell>
+                        <TableCell align="left"><span>{t.date}</span></TableCell>
+                        <TableCell align="left"><span>{t.amount}</span></TableCell>
+                        <TableCell align="left"><span><TagsInput chipColor={highlight ? 'secondary' : 'primary'} tags={tags} onChange={(_tags) => this.handleDataUpdate(key, {tags: _tags, isRead}, currentAdditionalData, initAdditionalData)}/></span></TableCell>
                     </TableRow>
                 )
             })
@@ -167,16 +168,17 @@ class Transactions extends React.Component {
                 )}
                 <div className="toolbar">
                     <div className="row-4-inputs">
-                        <div className="input-box with-top-label">
-                            <label className="date-label" htmlFor="start-month">מחודש</label>
-                            <input id="start-month" type="month" value={this.state.startMonth} onChange={event => this.updateStartMonth(event.target.value)}/>
-                        </div>
+                        <TextField
+                            label="מחודש"
+                            type="month"
+                            value={this.state.startMonth} onChange={event => this.updateStartMonth(event.target.value)}
+                        />
 
-
-                        <div className="input-box with-top-label">
-                            <label className="date-label" htmlFor="start-month">עד חודש</label>
-                            <input id="end-month" type="month" value={this.state.endMonth} onChange={event => this.updateEndMonth(event.target.value)}/>
-                        </div>
+                        <TextField
+                            label="עד חודש"
+                            type="month"
+                            value={this.state.endMonth} onChange={event => this.updateEndMonth(event.target.value)}
+                        />
 
                     </div>
                     <div className="row-1-3-inputs">
@@ -197,11 +199,11 @@ class Transactions extends React.Component {
                         <Table >
                             <TableHead>
                                 <TableRow>
-                                    <TableCell className={classes.readColumn}>נקרא</TableCell>
-                                    <TableCell className={classes.nameColumn} align="right">שם</TableCell>
-                                    <TableCell className={classes.dateColumn} align="right">תאריך</TableCell>
-                                    <TableCell className={classes.amountColumn} align="right">סכום</TableCell>
-                                    <TableCell align="right">קטגוריות</TableCell>
+                                    <TableCell align="left" className={classes.readColumn}>נקרא</TableCell>
+                                    <TableCell align="left" className={classes.nameColumn} align="right">שם</TableCell>
+                                    <TableCell align="left" className={classes.dateColumn} align="right">תאריך</TableCell>
+                                    <TableCell align="left" className={classes.amountColumn} align="right">סכום</TableCell>
+                                    <TableCell align="left">קטגוריות</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>

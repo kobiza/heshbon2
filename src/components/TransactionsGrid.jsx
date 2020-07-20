@@ -34,11 +34,11 @@ class TransactionsGrid extends React.Component {
 
                 return (
                     <TableRow key={key}>
-                        <TableCell align="right"><span><input type="checkbox" tabIndex="-1" checked={t.isRead} disabled={true}/></span></TableCell>
-                        <TableCell align="right"><span>{t.name}</span></TableCell>
-                        <TableCell align="right"><span>{t.date}</span></TableCell>
-                        <TableCell align="right"><span>{t.amount}</span></TableCell>
-                        <TableCell align="right"><span><TagsInput tags={t.tags} onChange={() => {}}/></span></TableCell>
+                        <TableCell align="left"><span><input type="checkbox" tabIndex="-1" checked={t.isRead} disabled={true}/></span></TableCell>
+                        <TableCell align="left"><span>{t.name}</span></TableCell>
+                        <TableCell align="left"><span>{t.date}</span></TableCell>
+                        <TableCell align="left"><span>{t.amount}</span></TableCell>
+                        <TableCell align="left"><span><TagsInput tags={t.tags} onChange={() => {}}/></span></TableCell>
                     </TableRow>
                 )
             })
@@ -49,11 +49,11 @@ class TransactionsGrid extends React.Component {
                     <Table >
                         <TableHead>
                             <TableRow>
-                                <TableCell className={classes.readColumn}>נקרא</TableCell>
-                                <TableCell className={classes.nameColumn} align="right">שם</TableCell>
-                                <TableCell className={classes.dateColumn} align="right">תאריך</TableCell>
-                                <TableCell className={classes.amountColumn} align="right">סכום</TableCell>
-                                <TableCell align="right">קטגוריות</TableCell>
+                                <TableCell align="left" className={classes.readColumn}>נקרא</TableCell>
+                                <TableCell align="left" className={classes.nameColumn} align="right">שם</TableCell>
+                                <TableCell align="left" className={classes.dateColumn} align="right">תאריך</TableCell>
+                                <TableCell align="left" className={classes.amountColumn} align="right">סכום</TableCell>
+                                <TableCell align="left" >קטגוריות</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>

@@ -10,6 +10,7 @@ import {
 import { ROUTES } from '../utils/consts'
 import FixedAndVariableCostsGraphs from './FixedAndVariableCostsGraphs.jsx'
 import MonthCostsGraphs from './MonthCostsGraphs.jsx'
+import RTL from './RTL.jsx'
 import PageTitle from './PageTitle.jsx'
 import Transactions from './Transactions.jsx'
 import TransactionsAutoTags from './TransactionsAutoTags.jsx'
@@ -171,8 +172,10 @@ class App2 extends React.Component {
         ))
         return (
             <ThemeProvider theme={theme}>
+
                 <Router>
 
+                <RTL>
                 <div className={classes.root}>
                     <CssBaseline />
                     <AppBar position="absolute" className={clsx(classes.appBar, this.state.open && classes.appBarShift)}>
@@ -262,6 +265,7 @@ class App2 extends React.Component {
 
                     </main>
                 </div>
+                </RTL>
                 </Router>
             </ThemeProvider>
         );
