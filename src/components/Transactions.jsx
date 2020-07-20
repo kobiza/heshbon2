@@ -1,6 +1,5 @@
 import * as _ from 'lodash';
 import React from 'react';
-import classNames from 'classnames'
 import {connect} from 'react-redux';
 import TagsInput from './TagsInput.jsx'
 import {filter, sortByDate, getTags} from "../utils/transactionsUtils";
@@ -10,6 +9,9 @@ import {
 } from '../redux/actions/transactionsActions'
 
 import Table from '@material-ui/core/Table';
+import Grid from '@material-ui/core/Grid';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -50,7 +52,17 @@ const styles = theme => ({
     },
     highlight: {
         backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-    }
+    },
+    paper: {
+        marginTop: theme.spacing(3),
+        marginBottom: theme.spacing(3),
+        padding: theme.spacing(2),
+        [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
+            marginTop: theme.spacing(1),
+            marginBottom: theme.spacing(6),
+            padding: theme.spacing(3),
+        },
+    },
 })
 
 
@@ -166,34 +178,42 @@ class Transactions extends React.Component {
                         ))}
                     </datalist>
                 )}
-                <div className="toolbar">
-                    <div className="row-4-inputs">
-                        <TextField
-                            label="מחודש"
-                            type="month"
-                            value={this.state.startMonth} onChange={event => this.updateStartMonth(event.target.value)}
-                        />
-
-                        <TextField
-                            label="עד חודש"
-                            type="month"
-                            value={this.state.endMonth} onChange={event => this.updateEndMonth(event.target.value)}
-                        />
-
-                    </div>
-                    <div className="row-1-3-inputs">
-                        <div className="input-box show-read">
-                            <input id="showRead" type="checkbox" checked={this.state.showRead} onChange={event => this.togglesSowRead(event.target.checked)}/>
-                            <label htmlFor="showRead">הצג נקראו</label>
-                        </div>
-                        <div className="input-box with-top-label">
-                            <label className="date-label">קטגוריות</label>
-                            <TagsInput tags={this.state.tagsFilter} onChange={this.updateTagsFilter}/>
-                        </div>
-
-                    </div>
-                </div>
-
+                <Paper className={classes.paper}>
+                    <Grid container spacing={3}>
+                        <Grid item xs={12} sm={3}>
+                            <TextField
+                                label="מחודש"
+                                type="month"
+                                value={this.state.startMonth} onChange={event => this.updateStartMonth(event.target.value)}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={3}>
+                            <TextField
+                                label="עד חודש"
+                                type="month"
+                                value={this.state.endMonth} onChange={event => this.updateEndMonth(event.target.value)}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12}>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={this.state.showRead} onChange={event => this.togglesSowRead(event.target.checked)}
+                                        name="checkedB"
+                                        color="primary"
+                                    />
+                                }
+                                label="נקראו"
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12}>
+                            <div className="input-box with-top-label">
+                                <label className="date-label">קטגוריות</label>
+                                <TagsInput tags={this.state.tagsFilter} onChange={this.updateTagsFilter}/>
+                            </div>
+                        </Grid>
+                    </Grid>
+                </Paper>
                 {this.props.transactions.length > 0 && (
                     <TableContainer component={Paper}>
                         <Table >

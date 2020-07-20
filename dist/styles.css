@@ -202,12 +202,6 @@ header {
 }
 /*graphs*/
 
-.graphs-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
 .recharts-wrapper {
     direction: ltr;
 }

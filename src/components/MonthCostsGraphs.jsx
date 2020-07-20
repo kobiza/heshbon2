@@ -5,6 +5,23 @@ import * as _ from "lodash";
 import {filter, sortByDate} from "../utils/transactionsUtils";
 import BarChart from './graphs/BarChart.jsx'
 import TransactionsGrid from './TransactionsGrid.jsx'
+import Grid from "@material-ui/core/Grid";
+import TextField from "@material-ui/core/TextField/TextField";
+import Paper from "@material-ui/core/Paper/Paper";
+import { withStyles } from '@material-ui/core/styles';
+
+const styles = theme => ({
+    paper: {
+        marginTop: theme.spacing(3),
+            marginBottom: theme.spacing(3),
+            padding: theme.spacing(2),
+            [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
+            marginTop: theme.spacing(1),
+                marginBottom: theme.spacing(6),
+                padding: theme.spacing(3),
+        },
+    },
+})
 
 const getTransactionMonth = t => t.date.slice(-7)
 
@@ -35,6 +52,8 @@ class MonthCostsGraphs extends Component {
         }
     }
     render() {
+        const { classes } = this.props
+
         const filterOptions = _.pick(this.state, ['startMonth', 'endMonth', 'tagsFilter'])
         const filteredTransactions = filter(this.props.transactions, filterOptions)
         const transactionsToShow = sortByDate(filteredTransactions)
@@ -55,28 +74,30 @@ class MonthCostsGraphs extends Component {
 
         return (
             <div className="graphs-page">
-                <div className="toolbar month-graph-toolbar">
-                    <div className="row-4-inputs">
-                        <div className="input-box with-top-label">
-                            <label className="date-label" htmlFor="start-month">מחודש</label>
-                            <input id="start-month" type="month" value={this.state.startMonth} onChange={event => this.updateStartMonth(event.target.value)}/>
-                        </div>
-
-
-                        <div className="input-box with-top-label">
-                            <label className="date-label" htmlFor="start-month">עד חודש</label>
-                            <input id="end-month" type="month" value={this.state.endMonth} onChange={event => this.updateEndMonth(event.target.value)}/>
-                        </div>
-
-                    </div>
-                    <div className="row-1-input">
-                        <div className="input-box with-top-label">
-                            <label className="date-label">קטגוריות</label>
-                            <TagsInput tags={this.state.tagsFilter} onChange={this.updateTagsFilter}/>
-                        </div>
-
-                    </div>
-                </div>
+                <Paper className={classes.paper}>
+                    <Grid container spacing={3}>
+                        <Grid item xs={12} sm={3}>
+                            <TextField
+                                label="מחודש"
+                                type="month"
+                                value={this.state.startMonth} onChange={event => this.updateStartMonth(event.target.value)}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={3}>
+                            <TextField
+                                label="עד חודש"
+                                type="month"
+                                value={this.state.endMonth} onChange={event => this.updateEndMonth(event.target.value)}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12}>
+                            <div className="input-box with-top-label">
+                                <label className="date-label">קטגוריות</label>
+                                <TagsInput tags={this.state.tagsFilter} onChange={this.updateTagsFilter}/>
+                            </div>
+                        </Grid>
+                    </Grid>
+                </Paper>
                 <div style={{height: '300px', width: '100%'}}>
                     <BarChart data={monthCostsData} groupKey="month" bars={bars}></BarChart>
                 </div>
@@ -87,4 +108,4 @@ class MonthCostsGraphs extends Component {
     }
 }
 
-export default connect(mapStateToProps)(MonthCostsGraphs);
+export default connect(mapStateToProps)(withStyles(styles)(MonthCostsGraphs));

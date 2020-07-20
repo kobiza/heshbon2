@@ -21,6 +21,7 @@ import { lighten, withStyles } from '@material-ui/core/styles';
 import clsx from "clsx";
 import SaveIcon from '@material-ui/icons/Save';
 import Fab from "@material-ui/core/Fab";
+import Grid from "@material-ui/core/Grid";
 
 const styles = theme => ({
     readColumn: {
@@ -48,6 +49,19 @@ const styles = theme => ({
     },
     highlight: {
         backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+    },
+    paper: {
+        marginTop: theme.spacing(3),
+        marginBottom: theme.spacing(3),
+        padding: theme.spacing(2),
+        [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
+            marginTop: theme.spacing(1),
+            marginBottom: theme.spacing(6),
+            padding: theme.spacing(3),
+        },
+    },
+    suggestButton: {
+        marginTop: 10
     }
 })
 
@@ -198,33 +212,29 @@ class TransactionsAutoTags extends React.Component {
 
         return (
             <div>
-                <div className="toolbar">
-                    <div className="row-4-inputs">
-                        <TextField
-                            label="מחודש"
-                            type="month"
-                            value={this.state.startMonth} onChange={event => this.updateStartMonth(event.target.value)}
-                        />
-                        {/*<div className="input-box with-top-label">*/}
-                        {/*    <label className="date-label" htmlFor="start-month">מחודש</label>*/}
-                        {/*    <input id="start-month" type="month" value={this.state.startMonth} onChange={event => this.updateStartMonth(event.target.value)}/>*/}
-                        {/*</div>*/}
-
-
-                        <TextField
-                            label="עד חודש"
-                            type="month"
-                            value={this.state.endMonth} onChange={event => this.updateEndMonth(event.target.value)}
-                        />
-                        {/*<div className="input-box with-top-label">*/}
-                        {/*    <label className="date-label" htmlFor="start-month">עד חודש</label>*/}
-                        {/*    <input id="end-month" type="month" value={this.state.endMonth} onChange={event => this.updateEndMonth(event.target.value)}/>*/}
-                        {/*</div>*/}
-                        <Button variant="contained" color="primary" onClick={this.autoTag}>
-                            הצע
-                        </Button>
-                    </div>
-                </div>
+                <Paper className={classes.paper}>
+                    <Grid container spacing={3}>
+                        <Grid item xs={12} sm={3}>
+                            <TextField
+                                label="מחודש"
+                                type="month"
+                                value={this.state.startMonth} onChange={event => this.updateStartMonth(event.target.value)}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={3}>
+                            <TextField
+                                label="עד חודש"
+                                type="month"
+                                value={this.state.endMonth} onChange={event => this.updateEndMonth(event.target.value)}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={3}>
+                            <Button className={classes.suggestButton} variant="contained" color="primary" onClick={this.autoTag}>
+                                הצע
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </Paper>
                 <ul className="transactions">
                     <TableContainer component={Paper}>
                         <Table >
