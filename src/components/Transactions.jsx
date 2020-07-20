@@ -220,9 +220,9 @@ class Transactions extends React.Component {
                             <TableHead>
                                 <TableRow>
                                     <TableCell align="left" className={classes.readColumn}>נקרא</TableCell>
-                                    <TableCell align="left" className={classes.nameColumn} align="right">שם</TableCell>
-                                    <TableCell align="left" className={classes.dateColumn} align="right">תאריך</TableCell>
-                                    <TableCell align="left" className={classes.amountColumn} align="right">סכום</TableCell>
+                                    <TableCell align="left" className={classes.nameColumn}>שם</TableCell>
+                                    <TableCell align="left" className={classes.dateColumn}>תאריך</TableCell>
+                                    <TableCell align="left" className={classes.amountColumn}>סכום</TableCell>
                                     <TableCell align="left">קטגוריות</TableCell>
                                 </TableRow>
                             </TableHead>
