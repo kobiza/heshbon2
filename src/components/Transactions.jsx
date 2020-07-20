@@ -156,12 +156,6 @@ class Transactions extends React.Component {
                 )
             })
 
-        const emptyLine = (
-            <li className={classNames("transaction", 'empty')}>
-                <span>לא נמצאו שורות להציג</span>
-            </li>
-        )
-
         return (
             <div>
                 { this.props.transactions.length > 0 && (
@@ -220,6 +214,7 @@ class Transactions extends React.Component {
                     color="secondary"
                     aria-label="save"
                     className={classes.saveButton}
+                    onClick={this.saveChanges}
                 >
                     <SaveIcon className={classes.extendedIcon} />
                 </Fab>

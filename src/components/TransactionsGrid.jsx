@@ -1,44 +1,69 @@
 import React from 'react';
 import classNames from 'classnames'
 import TagsInput from './TagsInput.jsx'
+import Paper from "@material-ui/core/Paper/Paper";
+import Table from "@material-ui/core/Table";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import TableCell from "@material-ui/core/TableCell/TableCell";
+import TableBody from "@material-ui/core/TableBody";
+import TableContainer from "@material-ui/core/TableContainer";
+import { withStyles } from '@material-ui/core/styles';
 
-export default class TransactionsGrid extends React.Component {
+const styles = {
+    readColumn: {
+        width: 70
+    },
+    nameColumn: {
+        width: 310
+    },
+    dateColumn: {
+        width: 70
+    },
+    amountColumn: {
+        width: 70
+    },
+}
+
+class TransactionsGrid extends React.Component {
     render() {
-        const transactions = this.props.transactions
-            .map((t) => {
+        const { classes } = this.props
+        const transactions2 = this.props.transactions
+            .map((t, index) => {
                 const key = `${t.cardKey}-${t.transactionIndex}`
+
                 return (
-                    <li className={classNames("transaction")} key={key}>
-                        <span className="transaction-isRead"><input type="checkbox" tabIndex="-1" checked={t.isRead} disabled={true}/></span>
-                        <span className="transaction-name">{t.name}</span>
-                        <span className="transaction-date">{t.date}</span>
-                        <span className="transaction-amount">{t.amount}</span>
-                        <span className="transaction-tags"><TagsInput tags={t.tags} onChange={() => {}}/></span>
-                    </li>
+                    <TableRow key={key}>
+                        <TableCell align="right"><span><input type="checkbox" tabIndex="-1" checked={t.isRead} disabled={true}/></span></TableCell>
+                        <TableCell align="right"><span>{t.name}</span></TableCell>
+                        <TableCell align="right"><span>{t.date}</span></TableCell>
+                        <TableCell align="right"><span>{t.amount}</span></TableCell>
+                        <TableCell align="right"><span><TagsInput tags={t.tags} onChange={() => {}}/></span></TableCell>
+                    </TableRow>
                 )
             })
 
-        const emptyLine = (
-            <li className={classNames("transaction", 'empty')}>
-                <span>לא נמצאו שורות להציג</span>
-            </li>
-        )
-
         return (
             <div>
-                <ul className="transactions">
-                    {this.props.transactions.length > 0 && (
-                        <li className="transaction-head">
-                            <span>נקרא?</span>
-                            <span>שם</span>
-                            <span>תאריך</span>
-                            <span>סכום</span>
-                            <span>קטגוריות</span>
-                        </li>
-                    )}
-                    {this.props.transactions.length > 0 ? transactions : emptyLine}
-                </ul>
+                <TableContainer component={Paper}>
+                    <Table >
+                        <TableHead>
+                            <TableRow>
+                                <TableCell className={classes.readColumn}>נקרא</TableCell>
+                                <TableCell className={classes.nameColumn} align="right">שם</TableCell>
+                                <TableCell className={classes.dateColumn} align="right">תאריך</TableCell>
+                                <TableCell className={classes.amountColumn} align="right">סכום</TableCell>
+                                <TableCell align="right">קטגוריות</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {transactions2}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
             </div>
         );
     }
 }
+
+export default withStyles(styles)(TransactionsGrid);

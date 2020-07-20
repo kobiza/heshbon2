@@ -8,6 +8,48 @@ import {
     fetchTransactions,
     updateCardTransactionsAdditionalData,
 } from '../redux/actions/transactionsActions'
+import TextField from '@material-ui/core/TextField';
+import Button from "@material-ui/core/Button";
+import Paper from "@material-ui/core/Paper/Paper";
+import Table from "@material-ui/core/Table";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import TableCell from "@material-ui/core/TableCell/TableCell";
+import TableBody from "@material-ui/core/TableBody";
+import TableContainer from "@material-ui/core/TableContainer";
+import { lighten, withStyles } from '@material-ui/core/styles';
+import clsx from "clsx";
+import SaveIcon from '@material-ui/icons/Save';
+import Fab from "@material-ui/core/Fab";
+
+const styles = theme => ({
+    readColumn: {
+        width: 70
+    },
+    nameColumn: {
+        width: 310
+    },
+    dateColumn: {
+        width: 70
+    },
+    amountColumn: {
+        width: 70
+    },
+    saveButton: {
+        position: 'fixed',
+        bottom: 40,
+        left: 40,
+    },
+    // margin: {
+    //     margin: theme.spacing(1)
+    // },
+    extendedIcon: {
+        margin: theme.spacing(1)
+    },
+    highlight: {
+        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+    }
+})
 
 const toTagsMap = (tags) => {
     return _.reduce(tags, (acc, tag) => {
@@ -52,23 +94,15 @@ class TransactionsAutoTags extends React.Component {
         this.state = {
             additionalDataUpdates: {},
             isAutoActive: false,
-            showRead: false,
             startMonth: '',
             endMonth: '',
-            tagsFilter: []
         }
 
-        this.togglesSowRead = (showRead) => {
-            this.setState({showRead})
-        }
         this.updateStartMonth = (startMonth) => {
             this.setState({startMonth})
         }
         this.updateEndMonth = (endMonth) => {
             this.setState({endMonth})
-        }
-        this.updateTagsFilter = (tagsFilter) => {
-            this.setState({tagsFilter})
         }
 
         this.handleDataUpdate = (rowKey, nextAdditionalData, initAdditionalData) => {
@@ -125,8 +159,10 @@ class TransactionsAutoTags extends React.Component {
     }
 
     render() {
+        const { classes } = this.props
+
         // add filter here + move start button next to filter fiels, after start filter, show only changed trans
-        const filterOptions = _.pick(this.state, ['showRead', 'startMonth', 'endMonth', 'tagsFilter'])
+        const filterOptions = _.pick(this.state, ['startMonth', 'endMonth'])
         const filteredTransactions = filter(this.props.transactions, filterOptions)
         const transactionToCheck = !this.state.isAutoActive ? filteredTransactions : _.filter(filteredTransactions, t => {
             const key = `${t.cardKey}-${t.transactionIndex}`
@@ -134,11 +170,12 @@ class TransactionsAutoTags extends React.Component {
             return !!this.state.additionalDataUpdates[key]
         })
         const transactionsToShow = sortByDate(transactionToCheck)
-        const transactions = transactionsToShow
+
+        const transactions2 = transactionsToShow
             .map((t, index) => {
                 const key = `${t.cardKey}-${t.transactionIndex}`
                 const dataOverrides = this.state.additionalDataUpdates[key] || {}
-                const hasChanges = !_.isEmpty(dataOverrides)
+                const highlight = !_.isEmpty(dataOverrides)
                 const initAdditionalData = {
                     isRead: t.isRead,
                     tags: t.tags,
@@ -149,26 +186,25 @@ class TransactionsAutoTags extends React.Component {
                 }
                 const {isRead, tags} = currentAdditionalData
                 return (
-                    <li className={classNames("transaction", {'has-changes': hasChanges})} key={key}>
-                        <span className="transaction-isRead"><input type="checkbox" checked={isRead} onChange={(event) => this.handleDataUpdate(key, {tags, isRead: event.target.checked}, initAdditionalData)}/></span>
-                        <span className="transaction-name">{t.name}</span>
-                        <span className="transaction-date">{t.date}</span>
-                        <span className="transaction-amount">{t.amount}</span>
-                        <span className="transaction-tags"><TagsInput inputTabIndex="-1" tags={tags} onChange={() => {}}/></span>
-                    </li>
+                    <TableRow key={key} className={clsx(highlight && classes.highlight)}>
+                        <TableCell align="right"><span><input type="checkbox" checked={isRead} onChange={(event) => this.handleDataUpdate(key, {tags, isRead: event.target.checked}, initAdditionalData)}/></span></TableCell>
+                        <TableCell align="right"><span>{t.name}</span></TableCell>
+                        <TableCell align="right"><span>{t.date}</span></TableCell>
+                        <TableCell align="right"><span>{t.amount}</span></TableCell>
+                        <TableCell align="right"><span><TagsInput inputTabIndex="-1" tags={tags} onChange={() => {}}/></span></TableCell>
+                    </TableRow>
                 )
             })
-
-        const emptyLine = (
-            <li className={classNames("transaction", 'empty')}>
-                <span>לא נמצאו שורות להציג</span>
-            </li>
-        )
 
         return (
             <div>
                 <div className="toolbar">
                     <div className="row-4-inputs">
+                        {/*<TextField*/}
+                        {/*    label="מחודש"*/}
+                        {/*    type="month"*/}
+                        {/*    value={this.state.startMonth} onChange={event => this.updateStartMonth(event.target.value)}*/}
+                        {/*/>*/}
                         <div className="input-box with-top-label">
                             <label className="date-label" htmlFor="start-month">מחודש</label>
                             <input id="start-month" type="month" value={this.state.startMonth} onChange={event => this.updateStartMonth(event.target.value)}/>
@@ -179,32 +215,40 @@ class TransactionsAutoTags extends React.Component {
                             <label className="date-label" htmlFor="start-month">עד חודש</label>
                             <input id="end-month" type="month" value={this.state.endMonth} onChange={event => this.updateEndMonth(event.target.value)}/>
                         </div>
-
-                    </div>
-                    <div className="row-3-1-inputs">
-                        <div className="input-box with-top-label">
-                            <label className="date-label">קטגוריות</label>
-                            <TagsInput tags={this.state.tagsFilter} onChange={this.updateTagsFilter}/>
-                        </div>
-                        <button onClick={this.autoTag}>הצע</button>
+                        <Button variant="contained" color="primary" onClick={this.autoTag}>
+                            הצע
+                        </Button>
                     </div>
                 </div>
                 <ul className="transactions">
-                    {this.props.transactions.length > 0 && (
-                        <li className="transaction-head">
-                            <span>נקרא?</span>
-                            <span>שם</span>
-                            <span>תאריך</span>
-                            <span>סכום</span>
-                            <span>קטגוריות</span>
-                        </li>
-                    )}
-                    {this.props.transactions.length > 0 && _.isEmpty(transactionsToShow) ? emptyLine : transactions}
+                    <TableContainer component={Paper}>
+                        <Table >
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell className={classes.readColumn}>נקרא</TableCell>
+                                    <TableCell className={classes.nameColumn} align="right">שם</TableCell>
+                                    <TableCell className={classes.dateColumn} align="right">תאריך</TableCell>
+                                    <TableCell className={classes.amountColumn} align="right">סכום</TableCell>
+                                    <TableCell align="right">קטגוריות</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {transactions2}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
                 </ul>
-                <button className="action-button" onClick={this.saveChanges}>☁️ שמור</button>
+                <Fab
+                    color="secondary"
+                    aria-label="save"
+                    className={classes.saveButton}
+                    onClick={this.saveChanges}
+                >
+                    <SaveIcon className={classes.extendedIcon} />
+                </Fab>
             </div>
         );
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TransactionsAutoTags);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(TransactionsAutoTags));
