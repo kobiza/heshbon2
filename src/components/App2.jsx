@@ -27,7 +27,7 @@ import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import Container from '@material-ui/core/Container';
 import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -54,6 +54,8 @@ const styles = theme => ({
         ...theme.mixins.toolbar,
     },
     appBar: {
+        backgroundColor: theme.palette.primary.main,
+        color: 'white',
         zIndex: theme.zIndex.drawer + 1,
         transition: theme.transitions.create(['width', 'margin'], {
             easing: theme.transitions.easing.sharp,
@@ -184,8 +186,8 @@ class App2 extends React.Component {
                 <RTL>
                 <div className={classes.root}>
                     <CssBaseline />
-                    <AppBar position="absolute" className={clsx(classes.appBar, this.state.open && classes.appBarShift)}>
-                        <Toolbar className={classes.toolbar}>
+                    <AppBar position="absolute" color="primary" className={clsx(classes.appBar, this.state.open && classes.appBarShift)}>
+                        <Toolbar color="primary" className={classes.toolbar}>
                             <IconButton
                                 edge="start"
                                 color="inherit"
@@ -213,7 +215,7 @@ class App2 extends React.Component {
                     >
                         <div className={classes.toolbarIcon}>
                             <IconButton onClick={this.handleDrawerClose}>
-                                <ChevronLeftIcon />
+                                <ChevronRightIcon />
                             </IconButton>
                         </div>
                         <Divider />
