@@ -78,15 +78,29 @@ function mapDispatchToProps(dispatch) {
         fetchTransactions: () => dispatch(fetchTransactions()),
     };
 }
+
+const formatted2DigitsNumber = number =>  ("0" + number).slice(-2);
+
+const toMonthInputDateFormat = (date) => {
+    const month = formatted2DigitsNumber(date.getMonth() + 1)
+    const year = date.getFullYear()
+
+    return `${year}-${month}`
+}
+
 class Transactions extends React.Component {
     constructor(props) {
         super(props);
 
+        const currentDate = new Date()
+        const prev1MonthDate = new Date()
+        prev1MonthDate.setMonth(prev1MonthDate.getMonth() - 1)
+
         this.state = {
             additionalDataUpdates: {},
             showRead: false,
-            startMonth: '',
-            endMonth: '',
+            startMonth: toMonthInputDateFormat(prev1MonthDate),
+            endMonth: toMonthInputDateFormat(currentDate),
             tagsFilter: []
         }
 

@@ -220,14 +220,14 @@ class TransactionsAutoTags extends React.Component {
                                 value={this.state.startMonth} onChange={event => this.updateStartMonth(event.target.value)}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={9}>
+                        <Grid item xs={12} sm={3}>
                             <TextField
                                 label="עד חודש"
                                 type="month"
                                 value={this.state.endMonth} onChange={event => this.updateEndMonth(event.target.value)}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={3}>
+                        <Grid item xs={12} sm={6}>
                             <Button className={classes.suggestButton} variant="contained" color="primary" onClick={this.filter}>
                                 חפש
                             </Button>

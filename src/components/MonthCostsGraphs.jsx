@@ -31,13 +31,26 @@ function mapStateToProps(state) {
     };
 }
 
+const formatted2DigitsNumber = number =>  ("0" + number).slice(-2);
+
+const toMonthInputDateFormat = (date) => {
+    const month = formatted2DigitsNumber(date.getMonth() + 1)
+    const year = date.getFullYear()
+
+    return `${year}-${month}`
+}
+
 class MonthCostsGraphs extends Component {
     constructor(props) {
         super(props);
 
+        const currentDate = new Date()
+        const prev6MonthDate = new Date()
+        prev6MonthDate.setMonth(prev6MonthDate.getMonth() - 6)
+
         this.state = {
-            startMonth: '',
-            endMonth: '',
+            startMonth: toMonthInputDateFormat(prev6MonthDate),
+            endMonth: toMonthInputDateFormat(currentDate),
             tagsFilter: []
         }
 

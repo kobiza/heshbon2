@@ -220,19 +220,19 @@ class TransactionsAutoTags extends React.Component {
                                 value={this.state.endMonth} onChange={event => this.updateEndMonth(event.target.value)}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={12}>
+                        <Grid item xs={12} sm={3}>
                             <TextField label="טקסט חופשי" value={this.state.searchText} onChange={event => this.updateSearchText(event.target.value)}/>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <div className="input-box with-top-label">
-                                <label className="date-label">קטגוריות</label>
-                                <TagsInput tags={this.state.tagsToApply} onChange={this.updateTagsToApply}/>
-                            </div>
                         </Grid>
                         <Grid item xs={12} sm={3}>
                             <Button className={classes.suggestButton} variant="contained" color="primary" onClick={this.filter}>
                                 חפש
                             </Button>
+                        </Grid>
+                        <Grid item xs={12} sm={9}>
+                            <div className="input-box with-top-label">
+                                <label className="date-label">קטגוריות</label>
+                                <TagsInput tags={this.state.tagsToApply} onChange={this.updateTagsToApply}/>
+                            </div>
                         </Grid>
                         <Grid item xs={12} sm={3}>
                             <Button className={classes.suggestButton} variant="contained" color="primary" onClick={() => this.updateMultiLines()}>
