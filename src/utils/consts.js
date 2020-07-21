@@ -3,4 +3,5 @@ export const ROUTES = {
     '/fixedAndVariableCostsGraphs': 'קבועות משתנות',
     '/monthCostsGraphs': 'גרף חודשים',
     '/transactionsAutoTags': 'אוטוטאג',
+    '/transactionsUpdateMulti': 'עדכון מהיר',
 }

@@ -107,9 +107,10 @@ class TransactionsAutoTags extends React.Component {
 
         this.state = {
             additionalDataUpdates: {},
-            isAutoActive: false,
             startMonth: '',
             endMonth: '',
+            searchText: '',
+            tagsToApply: [],
             filteredTransactions: []
         }
 
@@ -118,6 +119,12 @@ class TransactionsAutoTags extends React.Component {
         }
         this.updateEndMonth = (endMonth) => {
             this.setState({endMonth})
+        }
+        this.updateSearchText = (searchText) => {
+            this.setState({searchText})
+        }
+        this.updateTagsToApply = (tagsToApply) => {
+            this.setState({tagsToApply})
         }
 
         this.handleDataUpdate = (rowKey, nextAdditionalData, initAdditionalData) => {
@@ -141,36 +148,21 @@ class TransactionsAutoTags extends React.Component {
             _.forEach(cardsTransactionsToUpdate, (cardAdditionalData, cardKey) => updateCardTransactionsAdditionalData(cardKey, cardAdditionalData))
         }
 
-        this.autoTag = () => {
-            const allReadTransactions = this.props.transactions.filter(t => t.isRead)
-            // const allUnreadTransactions = this.props.transactions.filter(t => !t.isRead)
-            const allNamesTags = _.reduce(allReadTransactions, (names, t) => {
-                const prevTagsMap = names[t.name] || {}
-                const newTagsMap = toTagsMap(t.tags)
-                names[t.name] = joinTagsMap(prevTagsMap, newTagsMap)
-
-                return names;
-            }, {})
-
-            const allNamesTagsArr = _.mapValues(allNamesTags, tagsMap => _.keys(tagsMap))
-
+        this.updateMultiLines = () => {
             const additionalDataUpdates = _.reduce(this.state.filteredTransactions, (acc, t) => {
-                const tagsToAdd = allNamesTagsArr[t.name]
-                if (tagsToAdd) {
-                    const key = `${t.cardKey}-${t.transactionIndex}`
+                const key = `${t.cardKey}-${t.transactionIndex}`
 
-                    acc[key] = {tags: tagsToAdd, isRead: true}
-                }
+                acc[key] = {tags: this.state.tagsToApply, isRead: true}
 
                 return acc
             }, {})
 
-            this.setState({additionalDataUpdates, isAutoActive: true})
+            this.setState({additionalDataUpdates})
         }
 
         this.filter = () => {
-            const filterOptions = _.pick(this.state, ['startMonth', 'endMonth'])
-            const filteredTransactions = filter(this.props.transactions, {...filterOptions, showRead: false})
+            const filterOptions = _.pick(this.state, ['startMonth', 'endMonth', 'searchText'])
+            const filteredTransactions = filter(this.props.transactions, filterOptions)
 
             this.setState({filteredTransactions})
         }
@@ -182,6 +174,7 @@ class TransactionsAutoTags extends React.Component {
 
     render() {
         const { classes } = this.props
+
         const transactionsToShow = sortByDate(this.state.filteredTransactions)
 
         const transactions2 = transactionsToShow
@@ -220,12 +213,21 @@ class TransactionsAutoTags extends React.Component {
                                 value={this.state.startMonth} onChange={event => this.updateStartMonth(event.target.value)}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={9}>
+                        <Grid item xs={12} sm={3}>
                             <TextField
                                 label="עד חודש"
                                 type="month"
                                 value={this.state.endMonth} onChange={event => this.updateEndMonth(event.target.value)}
                             />
+                        </Grid>
+                        <Grid item xs={12} sm={12}>
+                            <TextField label="טקסט חופשי" value={this.state.searchText} onChange={event => this.updateSearchText(event.target.value)}/>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <div className="input-box with-top-label">
+                                <label className="date-label">קטגוריות</label>
+                                <TagsInput tags={this.state.tagsToApply} onChange={this.updateTagsToApply}/>
+                            </div>
                         </Grid>
                         <Grid item xs={12} sm={3}>
                             <Button className={classes.suggestButton} variant="contained" color="primary" onClick={this.filter}>
@@ -233,8 +235,8 @@ class TransactionsAutoTags extends React.Component {
                             </Button>
                         </Grid>
                         <Grid item xs={12} sm={3}>
-                            <Button className={classes.suggestButton} variant="contained" color="primary" onClick={this.autoTag}>
-                                הצע
+                            <Button className={classes.suggestButton} variant="contained" color="primary" onClick={() => this.updateMultiLines()}>
+                                עדכן
                             </Button>
                         </Grid>
                     </Grid>

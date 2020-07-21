@@ -14,6 +14,7 @@ import RTL from './RTL.jsx'
 import PageTitle from './PageTitle.jsx'
 import Transactions from './Transactions.jsx'
 import TransactionsAutoTags from './TransactionsAutoTags.jsx'
+import TransactionsUpdateMulti from './TransactionsUpdateMulti.jsx'
 import {loginWithGoogle, fetchAuthData, signOut} from '../redux/actions/authActions'
 import clsx from 'clsx';
 import { createMuiTheme, ThemeProvider, withStyles } from '@material-ui/core/styles';
@@ -28,6 +29,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Container from '@material-ui/core/Container';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import FastForwardIcon from '@material-ui/icons/FastForward';
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -178,6 +180,9 @@ class App2 extends React.Component {
         const link4 = React.forwardRef((linkProps, ref) => (
             <Link ref={ref} to="/transactionsAutoTags" {...linkProps} />
         ))
+        const link5 = React.forwardRef((linkProps, ref) => (
+            <Link ref={ref} to="/transactionsUpdateMulti" {...linkProps} />
+        ))
         return (
             <ThemeProvider theme={theme}>
 
@@ -245,6 +250,12 @@ class App2 extends React.Component {
                                     </ListItemIcon>
                                     <ListItemText primary={ROUTES["/transactionsAutoTags"]} />
                                 </ListItem>
+                                <ListItem button className={classes.menuItem} component={link5}>
+                                    <ListItemIcon>
+                                        <FastForwardIcon />
+                                    </ListItemIcon>
+                                    <ListItemText primary={ROUTES["/transactionsUpdateMulti"]} />
+                                </ListItem>
                             </div>
                         </List>
                     </Drawer>
@@ -260,6 +271,9 @@ class App2 extends React.Component {
                                 </Route>
                                 <Route path="/transactionsAutoTags">
                                     {this.props.authData && <TransactionsAutoTags/>}
+                                </Route>
+                                <Route path="/transactionsUpdateMulti">
+                                    {this.props.authData && <TransactionsUpdateMulti/>}
                                 </Route>
                                 <Route path="/">
                                     {this.props.authData && <Transactions/>}
