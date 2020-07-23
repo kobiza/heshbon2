@@ -93,13 +93,13 @@ class Transactions extends React.Component {
         super(props);
 
         const currentDate = new Date()
-        const prev1MonthDate = new Date()
-        prev1MonthDate.setMonth(prev1MonthDate.getMonth() - 1)
+        const prev2MonthDate = new Date()
+        prev2MonthDate.setMonth(prev2MonthDate.getMonth() - 2)
 
         this.state = {
             additionalDataUpdates: {},
             showRead: false,
-            startMonth: toMonthInputDateFormat(prev1MonthDate),
+            startMonth: toMonthInputDateFormat(prev2MonthDate),
             endMonth: toMonthInputDateFormat(currentDate),
             tagsFilter: []
         }

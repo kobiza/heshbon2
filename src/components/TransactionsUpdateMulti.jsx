@@ -110,6 +110,7 @@ class TransactionsAutoTags extends React.Component {
             startMonth: '',
             endMonth: '',
             searchText: '',
+            tagsFilter: [],
             tagsToApply: [],
             filteredTransactions: []
         }
@@ -125,6 +126,9 @@ class TransactionsAutoTags extends React.Component {
         }
         this.updateTagsToApply = (tagsToApply) => {
             this.setState({tagsToApply})
+        }
+        this.updateTagsFilter = (tagsFilter) => {
+            this.setState({tagsFilter})
         }
 
         this.handleDataUpdate = (rowKey, nextAdditionalData, initAdditionalData) => {
@@ -161,7 +165,7 @@ class TransactionsAutoTags extends React.Component {
         }
 
         this.filter = () => {
-            const filterOptions = _.pick(this.state, ['startMonth', 'endMonth', 'searchText'])
+            const filterOptions = _.pick(this.state, ['startMonth', 'endMonth', 'searchText', 'tagsFilter'])
             const filteredTransactions = filter(this.props.transactions, filterOptions)
 
             this.setState({filteredTransactions})
@@ -220,8 +224,14 @@ class TransactionsAutoTags extends React.Component {
                                 value={this.state.endMonth} onChange={event => this.updateEndMonth(event.target.value)}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={3}>
+                        <Grid item xs={12} sm={6}>
                             <TextField label="טקסט חופשי" value={this.state.searchText} onChange={event => this.updateSearchText(event.target.value)}/>
+                        </Grid>
+                        <Grid item xs={12} sm={9}>
+                            <div className="input-box with-top-label">
+                                <label className="date-label">קטגוריות חיפוש</label>
+                                <TagsInput tags={this.state.tagsFilter} onChange={this.updateTagsFilter}/>
+                            </div>
                         </Grid>
                         <Grid item xs={12} sm={3}>
                             <Button className={classes.suggestButton} variant="contained" color="primary" onClick={this.filter}>
@@ -230,7 +240,7 @@ class TransactionsAutoTags extends React.Component {
                         </Grid>
                         <Grid item xs={12} sm={9}>
                             <div className="input-box with-top-label">
-                                <label className="date-label">קטגוריות</label>
+                                <label className="date-label">קטגוירות לעדכון</label>
                                 <TagsInput tags={this.state.tagsToApply} onChange={this.updateTagsToApply}/>
                             </div>
                         </Grid>
