@@ -38,7 +38,7 @@ class TransactionsGrid extends React.Component {
                         <TableCell align="left"><span>{t.name}</span></TableCell>
                         <TableCell align="left"><span>{t.date}</span></TableCell>
                         <TableCell align="left"><span>{t.amount}</span></TableCell>
-                        <TableCell align="left"><span><TagsInput tags={t.tags} onChange={() => {}}/></span></TableCell>
+                        <TableCell align="left"><span><TagsInput tags={t.tags} isReadOnly={true}/></span></TableCell>
                     </TableRow>
                 )
             })
