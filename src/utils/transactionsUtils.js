@@ -25,13 +25,15 @@ const getTagsMap = (transactions) => {
 export const getTags = (transactions) => Object.keys(getTagsMap(transactions))
 
 
-export const filter = (transactions, {showRead = true, startMonth = '', endMonth = '', tagsFilter = [], searchText = ''}) => {
+export const filter = (transactions, {showRead = true, startMonth = '', endMonth = '', tagsFilter = [], tagsReject= [], searchText = ''}) => {
     const tagsMap = getTagsMap(transactions)
+    const hasTag = (tagName, index) =>  _.get(tagsMap, [tagName, index], false)
     const shouldShowItem = (transaction, i) => {
         return (showRead || !transaction.isRead) &&
             (!startMonth || isDateAfter(toInputMonthFormat(transaction.date), startMonth)) &&
             (!endMonth || isDateBefore(toInputMonthFormat(transaction.date), endMonth)) &&
-            (_.isEmpty(tagsFilter) || _.every(tagsFilter, tag => _.get(tagsMap, [tag, i], false))) &&
+            (_.isEmpty(tagsFilter) || _.every(tagsFilter, tag => hasTag(tag, i))) &&
+            (_.isEmpty(tagsReject) || _.every(tagsReject, tag => !hasTag(tag, i))) &&
             (!searchText || transaction.name.includes(searchText))
     }
 

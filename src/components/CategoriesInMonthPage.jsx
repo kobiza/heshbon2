@@ -43,14 +43,16 @@ class CategoriesInMonthPage extends Component {
     constructor(props) {
         super(props);
 
-        const currentDate = new Date()
-        const prev6MonthDate = new Date()
-        prev6MonthDate.setMonth(prev6MonthDate.getMonth() - 6)
+        const endDateMonth = new Date()
+        endDateMonth.setMonth(endDateMonth.getMonth() - 2)
+        const startDateMonth = new Date()
+        startDateMonth.setMonth(startDateMonth.getMonth() - 7)
 
         this.state = {
-            startMonth: toMonthInputDateFormat(prev6MonthDate),
-            endMonth: toMonthInputDateFormat(currentDate),
-            tagsFilter: []
+            startMonth: toMonthInputDateFormat(startDateMonth),
+            endMonth: toMonthInputDateFormat(endDateMonth),
+            tagsFilter: [],
+            tagsReject: []
         }
 
         this.updateStartMonth = (startMonth) => {
@@ -62,11 +64,14 @@ class CategoriesInMonthPage extends Component {
         this.updateTagsFilter = (tagsFilter) => {
             this.setState({tagsFilter})
         }
+        this.updateTagsReject = (tagsReject) => {
+            this.setState({tagsReject})
+        }
     }
     render() {
         const { classes } = this.props
 
-        const filterOptions = _.pick(this.state, ['startMonth', 'endMonth', 'tagsFilter'])
+        const filterOptions = _.pick(this.state, ['startMonth', 'endMonth', 'tagsFilter', 'tagsReject'])
         const filteredTransactions = filter(this.props.transactions, filterOptions)
 
         return (
@@ -92,6 +97,12 @@ class CategoriesInMonthPage extends Component {
                             <div className="input-box with-top-label">
                                 <label className="date-label">קטגוריות</label>
                                 <TagsInput tags={this.state.tagsFilter} onChange={this.updateTagsFilter}/>
+                            </div>
+                        </Grid>
+                        <Grid item xs={12} sm={12}>
+                            <div className="input-box with-top-label">
+                                <label className="date-label">ללא קטגוריות</label>
+                                <TagsInput tags={this.state.tagsReject} onChange={this.updateTagsReject}/>
                             </div>
                         </Grid>
                     </Grid>
