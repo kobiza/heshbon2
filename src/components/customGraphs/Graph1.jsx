@@ -5,16 +5,40 @@ import BarChart from '../graphs/BarChart.jsx'
 
 const getTransactionMonth = t => t.date.slice(-7)
 const getTransactionCategory = t => {
-    if (_.some(t.tags, tagName => tagName === 'קבועות')) {
+    const categoriesMap = _.reduce(t.tags, (acc, tag) => {
+        acc[tag] = true
+
+        return acc
+    }, {})
+
+    const hasCategory = (category) => !!categoriesMap[category]
+    
+    if (hasCategory('מגורים וחשבונות תקופתיים')) {
         return 'fixed'
     }
 
-    if (_.some(t.tags, tagName => tagName === 'משתנות')) {
-        if (_.some(t.tags, tagName => tagName === 'חדפ')) {
+    if (hasCategory('מחיה וקניות שוטפות')) {
+        if (hasCategory('חד פעמי')) {
             return 'variable_once'
         }
 
         return 'variable'
+    }
+
+    if (hasCategory('הוצאות נסיעה ורכב')) {
+        return 'car'
+    }
+
+    if (hasCategory('פנאי ובילויים')) {
+        return 'pleasure'
+    }
+
+    if (hasCategory('שונות')) {
+        return 'others'
+    }
+
+    if (hasCategory('חריג')) {
+        return 'irregular'
     }
 
     return 'unknown'
@@ -31,6 +55,10 @@ export default class Graph1 extends Component {
                 'fixed': [],
                 'variable_once': [],
                 'variable': [],
+                'car': [],
+                'pleasure': [],
+                'others': [],
+                'irregular': [],
                 'unknown': [],
             })
         })
@@ -44,31 +72,66 @@ export default class Graph1 extends Component {
             }
         })
 
+        const tagsColors = {
+            'fixed': '#f9ca24',
+            'variable_once': '#ffbe76',
+            'variable': '#badc58',
+            'car': '#686de0',
+            'pleasure': '#e056fd',
+            'others': '#c7ecee',
+            'irregular': '#ff7979',
+            'unknown': '#cccccc',
+        }
+
         const data = _.values(dataObj)
         const bars = [
             {
                 dataKey: 'fixed',
-                name: 'קבועות',
-                color: '#ffc658',
-                stackId: undefined
-            },
-            {
-                dataKey: 'variable_once',
-                name: 'חדפ',
-                color: '#8884d8',
-                stackId: 'variable'
+                name: 'מגורים וחשבונות תקופתיים',
+                color: tagsColors.fixed,
+                stackId: 'a'
             },
             {
                 dataKey: 'variable',
-                name: 'משתנות',
-                color: '#82ca9d',
-                stackId: 'variable'
+                name: 'מחיה וקניות שוטפות',
+                color: tagsColors.variable,
+                stackId: 'a'
+            },
+            {
+                dataKey: 'car',
+                name: 'הוצאות נסיעה ורכב',
+                color: tagsColors.car,
+                stackId: 'a'
+            },
+            {
+                dataKey: 'pleasure',
+                name: 'פנאי ובילויים',
+                color: tagsColors.pleasure,
+                stackId: 'a'
+            },
+            {
+                dataKey: 'others',
+                name: 'שונות',
+                color: tagsColors.others,
+                stackId: 'a'
+            },
+            {
+                dataKey: 'variable_once',
+                name: 'חד פעמי',
+                color: tagsColors.variable_once,
+                stackId: 'a'
             },
             {
                 dataKey: 'unknown',
                 name: 'לא ידוע',
-                color: '#95a5a6',
-                stackId: undefined
+                color: tagsColors.unknown,
+                stackId: 'a'
+            },
+            {
+                dataKey: 'irregular',
+                name: 'חריג',
+                color: tagsColors.irregular,
+                stackId: 'a'
             },
         ]
         return (

@@ -20,12 +20,13 @@ export default class MyBarChart extends PureComponent {
                     margin={{
                         top: 20, right: 30, left: 20, bottom: 5,
                     }}
+                    style={{direction: 'ltr'}}
                 >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey={this.props.groupKey} />
-                    <YAxis />
+                    <XAxis dataKey={this.props.groupKey} reversed={true} />
+                    <YAxis orientation="right"/>
                     <Tooltip />
-                    <Legend />
+                    <Legend/>
                     {getBars(this.props)}
                 </BarChart>
             </ResponsiveContainer>

@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import {connect} from "react-redux";
-import TagsInput from "./TagsInput.jsx";
+import TagsInput from "./buildingBlocks/TagsInput.jsx";
 import * as _ from "lodash";
 import {filter, sortByDate} from "../utils/transactionsUtils";
-import BarChart from './graphs/BarChart.jsx'
-import TransactionsGrid from './TransactionsGrid.jsx'
+import TransactionsGrid from './buildingBlocks/TransactionsGrid.jsx'
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField/TextField";
 import Paper from "@material-ui/core/Paper/Paper";
 import { withStyles } from '@material-ui/core/styles';
+import Graph1 from "./customGraphs/Graph1.jsx";
 
 const styles = theme => ({
     paper: {
@@ -70,20 +70,6 @@ class MonthCostsGraphs extends Component {
         const filterOptions = _.pick(this.state, ['startMonth', 'endMonth', 'tagsFilter'])
         const filteredTransactions = filter(this.props.transactions, filterOptions)
         const transactionsToShow = sortByDate(filteredTransactions)
-        const transactionsInMonth = _.groupBy(transactionsToShow, getTransactionMonth)
-        const monthCosts = _.mapValues(transactionsInMonth, (transactions, month) => ({
-            month,
-            costs: Math.ceil(_.sum(transactions.map(t => t.amount)))
-        }))
-        const monthCostsData = _.values(monthCosts)
-        const bars = [
-            {
-                dataKey: 'costs',
-                name: 'הוצאות',
-                color: '#ffc658',
-                stackId: undefined
-            }
-        ]
 
         return (
             <div className="graphs-page">
@@ -111,9 +97,7 @@ class MonthCostsGraphs extends Component {
                         </Grid>
                     </Grid>
                 </Paper>
-                <div style={{height: '300px', width: '100%'}}>
-                    <BarChart data={monthCostsData} groupKey="month" bars={bars}></BarChart>
-                </div>
+                <Graph1 transactions={transactionsToShow} style={{width: '100%', height: '300px'}}/>
 
                 <TransactionsGrid transactions={transactionsToShow}/>
             </div>

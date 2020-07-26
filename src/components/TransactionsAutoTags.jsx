@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import React from 'react';
 import classNames from 'classnames'
 import {connect} from 'react-redux';
-import TagsInput from './TagsInput.jsx'
+import TagsInput from './buildingBlocks/TagsInput.jsx'
 import {filter, sortByDate} from "../utils/transactionsUtils";
 import {
     fetchTransactions,
