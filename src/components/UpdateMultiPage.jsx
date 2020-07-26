@@ -1,9 +1,8 @@
 import * as _ from 'lodash';
 import React from 'react';
-import classNames from 'classnames'
 import {connect} from 'react-redux';
 import TagsInput from './buildingBlocks/TagsInput.jsx'
-import {filter, sortByDate} from "../utils/transactionsUtils";
+import {filter} from "../utils/transactionsUtils";
 import {
     fetchTransactions,
     updateCardTransactionsAdditionalData,
@@ -11,44 +10,20 @@ import {
 import TextField from '@material-ui/core/TextField';
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper/Paper";
-import Table from "@material-ui/core/Table";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import TableCell from "@material-ui/core/TableCell/TableCell";
-import TableBody from "@material-ui/core/TableBody";
-import TableContainer from "@material-ui/core/TableContainer";
 import { lighten, withStyles } from '@material-ui/core/styles';
-import clsx from "clsx";
 import SaveIcon from '@material-ui/icons/Save';
 import Fab from "@material-ui/core/Fab";
 import Grid from "@material-ui/core/Grid";
+import TransactionsGrid from "./buildingBlocks/TransactionsGrid.jsx";
 
 const styles = theme => ({
-    readColumn: {
-        width: 70
-    },
-    nameColumn: {
-        width: 310
-    },
-    dateColumn: {
-        width: 70
-    },
-    amountColumn: {
-        width: 70
-    },
     saveButton: {
         position: 'fixed',
         bottom: 40,
         right: 40,
     },
-    // margin: {
-    //     margin: theme.spacing(1)
-    // },
     extendedIcon: {
         margin: theme.spacing(1)
-    },
-    highlight: {
-        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
     },
     paper: {
         marginTop: theme.spacing(3),
@@ -64,30 +39,6 @@ const styles = theme => ({
         marginTop: 10
     }
 })
-
-const toTagsMap = (tags) => {
-    return _.reduce(tags, (acc, tag) => {
-        acc[tag] = true
-        return acc
-    }, {})
-}
-
-const joinTagsMap = (prevTags, newTags) => {
-    if (_.isEmpty(prevTags)) {
-        return newTags
-    }
-    if (_.isEmpty(newTags)) {
-        return prevTags
-    }
-    const allTagsMap = {
-        ...prevTags,
-        ...newTags
-    }
-
-    return _.pickBy(_.mapValues(allTagsMap, (v, tagName) => {
-        return prevTags[tagName] && newTags[tagName]
-    }))
-}
 
 function mapStateToProps(state) {
     return {
@@ -131,7 +82,7 @@ class TransactionsAutoTags extends React.Component {
             this.setState({tagsFilter})
         }
 
-        this.handleDataUpdate = (rowKey, nextAdditionalData, initAdditionalData) => {
+        this.handleDataUpdate = (rowKey, nextAdditionalData, prevAdditionalData, initAdditionalData) => {
             const additionalDataUpdates = {
                 ...this.state.additionalDataUpdates,
                 [rowKey]: _.isEqual(nextAdditionalData, initAdditionalData) ? {} : nextAdditionalData
@@ -179,33 +130,6 @@ class TransactionsAutoTags extends React.Component {
     render() {
         const { classes } = this.props
 
-        const transactionsToShow = sortByDate(this.state.filteredTransactions)
-
-        const transactions2 = transactionsToShow
-            .map((t, index) => {
-                const key = `${t.cardKey}-${t.transactionIndex}`
-                const dataOverrides = this.state.additionalDataUpdates[key] || {}
-                const highlight = !_.isEmpty(dataOverrides)
-                const initAdditionalData = {
-                    isRead: t.isRead,
-                    tags: t.tags,
-                }
-                const currentAdditionalData = {
-                    ...initAdditionalData,
-                    ...dataOverrides
-                }
-                const {isRead, tags} = currentAdditionalData
-                return (
-                    <TableRow key={key} className={clsx(highlight && classes.highlight)}>
-                        <TableCell align="left"><span><input type="checkbox" checked={isRead} onChange={(event) => this.handleDataUpdate(key, {tags, isRead: event.target.checked}, initAdditionalData)}/></span></TableCell>
-                        <TableCell align="left"><span>{t.name}</span></TableCell>
-                        <TableCell align="left"><span>{t.date}</span></TableCell>
-                        <TableCell align="left"><span>{t.amount}</span></TableCell>
-                        <TableCell align="left"><span><TagsInput inputTabIndex="-1" tags={tags} onChange={() => {}}/></span></TableCell>
-                    </TableRow>
-                )
-            })
-
         return (
             <div>
                 <Paper className={classes.paper}>
@@ -251,24 +175,7 @@ class TransactionsAutoTags extends React.Component {
                         </Grid>
                     </Grid>
                 </Paper>
-                <ul className="transactions">
-                    <TableContainer component={Paper}>
-                        <Table >
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell align="left" className={classes.readColumn}>נקרא</TableCell>
-                                    <TableCell align="left" className={classes.nameColumn}>שם</TableCell>
-                                    <TableCell align="left" className={classes.dateColumn}>תאריך</TableCell>
-                                    <TableCell align="left" className={classes.amountColumn}>סכום</TableCell>
-                                    <TableCell align="left">קטגוריות</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {transactions2}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                </ul>
+                <TransactionsGrid transactions={this.state.filteredTransactions} isTagsReadOnly={true} isReadReadOnly={false} onTransactionChanged={this.handleDataUpdate} additionalDataUpdates={this.state.additionalDataUpdates}/>
                 <Fab
                     color="secondary"
                     aria-label="save"

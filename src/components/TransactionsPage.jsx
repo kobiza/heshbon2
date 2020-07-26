@@ -2,56 +2,31 @@ import * as _ from 'lodash';
 import React from 'react';
 import {connect} from 'react-redux';
 import TagsInput from './buildingBlocks/TagsInput.jsx'
-import {filter, sortByDate, getTags} from "../utils/transactionsUtils";
+import TransactionsGrid from './buildingBlocks/TransactionsGrid.jsx'
+import {filter, getTags} from "../utils/transactionsUtils";
 import {
     fetchTransactions,
     updateCardTransactionsAdditionalData,
 } from '../redux/actions/transactionsActions'
 
-import Table from '@material-ui/core/Table';
 import Grid from '@material-ui/core/Grid';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
 import Fab from '@material-ui/core/Fab';
 import SaveIcon from '@material-ui/icons/Save';
 import Paper from '@material-ui/core/Paper';
 import { lighten, withStyles } from '@material-ui/core/styles';
-import clsx from "clsx";
 import TextField from "@material-ui/core/TextField/TextField";
 
 
-//70px 310px 100px 70px 1fr
 const styles = theme => ({
-    readColumn: {
-        width: 70
-    },
-    nameColumn: {
-        width: 310
-    },
-    dateColumn: {
-        width: 70
-    },
-    amountColumn: {
-        width: 70
-    },
     saveButton: {
         position: 'fixed',
         bottom: 40,
         right: 40,
     },
-    // margin: {
-    //     margin: theme.spacing(1)
-    // },
     extendedIcon: {
         margin: theme.spacing(1)
-    },
-    highlight: {
-        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
     },
     paper: {
         marginTop: theme.spacing(3),
@@ -156,32 +131,7 @@ class TransactionsPage extends React.Component {
     render() {
         const { classes } = this.props
         const filterOptions = _.pick(this.state, ['showRead', 'startMonth', 'endMonth', 'tagsFilter'])
-        const transactionsToShow = sortByDate(filter(this.props.transactions, filterOptions))
-
-        const transactions2 = transactionsToShow
-            .map((t, index) => {
-                const key = `${t.cardKey}-${t.transactionIndex}`
-                const dataOverrides = this.state.additionalDataUpdates[key] || {}
-                const highlight = !_.isEmpty(dataOverrides)
-                const initAdditionalData = {
-                    isRead: t.isRead,
-                    tags: t.tags,
-                }
-                const currentAdditionalData = {
-                    ...initAdditionalData,
-                    ...dataOverrides
-                }
-                const {isRead, tags} = currentAdditionalData
-                return (
-                    <TableRow key={key} className={clsx(highlight && classes.highlight)}>
-                        <TableCell align="left"><span><input type="checkbox" tabIndex="-1" checked={isRead} onChange={(event) => this.handleDataUpdate(key, {tags, isRead: event.target.checked}, currentAdditionalData, initAdditionalData)}/></span></TableCell>
-                        <TableCell align="left"><span>{t.name}</span></TableCell>
-                        <TableCell align="left"><span>{t.date}</span></TableCell>
-                        <TableCell align="left"><span>{t.amount}</span></TableCell>
-                        <TableCell align="left"><span><TagsInput chipColor={highlight ? 'secondary' : 'primary'} tags={tags} onChange={(_tags) => this.handleDataUpdate(key, {tags: _tags, isRead}, currentAdditionalData, initAdditionalData)}/></span></TableCell>
-                    </TableRow>
-                )
-            })
+        const transactionsToShow = filter(this.props.transactions, filterOptions)
 
         return (
             <div>
@@ -228,24 +178,7 @@ class TransactionsPage extends React.Component {
                         </Grid>
                     </Grid>
                 </Paper>
-                {this.props.transactions.length > 0 && (
-                    <TableContainer component={Paper}>
-                        <Table >
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell align="left" className={classes.readColumn}>נקרא</TableCell>
-                                    <TableCell align="left" className={classes.nameColumn}>שם</TableCell>
-                                    <TableCell align="left" className={classes.dateColumn}>תאריך</TableCell>
-                                    <TableCell align="left" className={classes.amountColumn}>סכום</TableCell>
-                                    <TableCell align="left">קטגוריות</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {transactions2}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                )}
+                <TransactionsGrid transactions={transactionsToShow} isTagsReadOnly={false} isReadReadOnly={false} onTransactionChanged={this.handleDataUpdate} additionalDataUpdates={this.state.additionalDataUpdates}/>
                 <Fab
                     color="secondary"
                     aria-label="save"
@@ -254,7 +187,6 @@ class TransactionsPage extends React.Component {
                 >
                     <SaveIcon className={classes.extendedIcon} />
                 </Fab>
-                {/*<button className="action-button" onClick={this.saveChanges}>☁️ שמור</button>*/}
             </div>
         );
     }

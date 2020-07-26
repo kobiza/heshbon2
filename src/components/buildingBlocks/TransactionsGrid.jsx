@@ -7,33 +7,50 @@ import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell/TableCell";
 import TableBody from "@material-ui/core/TableBody";
 import TableContainer from "@material-ui/core/TableContainer";
-import { withStyles } from '@material-ui/core/styles';
+import {lighten, withStyles} from '@material-ui/core/styles';
 import PropTypes from "prop-types";
+import * as _ from "lodash";
+import clsx from "clsx";
+import {sortByDate} from "../../utils/transactionsUtils";
 
-const styles = {
+const styles = theme => ({
     col70: {
         width: 70
     },
     col310: {
         width: 310
-    }
-}
+    },
+    highlight: {
+        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+    },
+})
 
 class TransactionsGrid extends React.Component {
     render() {
-        const { classes, isReadOnly = true } = this.props
+        const { classes, isTagsReadOnly = true, isReadReadOnly = true, onTransactionChanged = _.noop, additionalDataUpdates = {} } = this.props
 
-        const transactions = this.props.transactions
+        const transactions = sortByDate(this.props.transactions)
             .map((t, index) => {
                 const key = `${t.cardKey}-${t.transactionIndex}`
+                const dataOverrides = additionalDataUpdates[key] || {}
+                const highlight = !_.isEmpty(dataOverrides)
+                const initAdditionalData = {
+                    isRead: t.isRead,
+                    tags: t.tags,
+                }
+                const currentAdditionalData = {
+                    ...initAdditionalData,
+                    ...dataOverrides
+                }
+                const {isRead, tags} = currentAdditionalData
 
                 return (
-                    <TableRow key={key}>
-                        <TableCell align="left"><span><input type="checkbox" tabIndex="-1" checked={t.isRead} disabled={isReadOnly}/></span></TableCell>
+                    <TableRow key={key} className={clsx(highlight && classes.highlight)}>
+                        <TableCell align="left"><span><input type="checkbox" tabIndex="-1" checked={isRead} disabled={isReadReadOnly}  onChange={(event) => onTransactionChanged(key, {tags, isRead: event.target.checked}, currentAdditionalData, initAdditionalData)}/></span></TableCell>
                         <TableCell align="left"><span>{t.name}</span></TableCell>
                         <TableCell align="left"><span>{t.date}</span></TableCell>
                         <TableCell align="left"><span>{t.amount}</span></TableCell>
-                        <TableCell align="left"><span><TagsInput tags={t.tags} isReadOnly={isReadOnly}/></span></TableCell>
+                        <TableCell align="left"><span><TagsInput chipColor={highlight ? 'secondary' : 'primary'} tags={tags} isReadOnly={isTagsReadOnly} onChange={(_tags) => onTransactionChanged(key, {tags: _tags, isRead}, currentAdditionalData, initAdditionalData)}/></span></TableCell>
                     </TableRow>
                 )
             })
@@ -63,7 +80,10 @@ class TransactionsGrid extends React.Component {
 
 TransactionsGrid.propTypes = {
     transactions: PropTypes.array,
-    isReadOnly: PropTypes.bool,
+    additionalDataUpdates: PropTypes.object,
+    onTransactionChanged: PropTypes.func,
+    isTagsReadOnly: PropTypes.bool,
+    isReadReadOnly: PropTypes.bool,
 }
 
 export default withStyles(styles)(TransactionsGrid);

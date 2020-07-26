@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {connect} from "react-redux";
 import TagsInput from "./buildingBlocks/TagsInput.jsx";
 import * as _ from "lodash";
-import {filter, sortByDate} from "../utils/transactionsUtils";
+import {filter} from "../utils/transactionsUtils";
 import TransactionsGrid from './buildingBlocks/TransactionsGrid.jsx'
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField/TextField";
@@ -69,7 +69,6 @@ class MonthCostsGraphs extends Component {
 
         const filterOptions = _.pick(this.state, ['startMonth', 'endMonth', 'tagsFilter'])
         const filteredTransactions = filter(this.props.transactions, filterOptions)
-        const transactionsToShow = sortByDate(filteredTransactions)
 
         return (
             <div className="graphs-page">
@@ -97,9 +96,9 @@ class MonthCostsGraphs extends Component {
                         </Grid>
                     </Grid>
                 </Paper>
-                <Graph1 transactions={transactionsToShow} style={{width: '100%', height: '300px'}}/>
+                <Graph1 transactions={filteredTransactions} style={{width: '100%', height: '300px'}}/>
 
-                <TransactionsGrid transactions={transactionsToShow}/>
+                <TransactionsGrid transactions={filteredTransactions}/>
             </div>
         );
     }
