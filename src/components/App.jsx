@@ -8,9 +8,9 @@ import {
 } from "react-router-dom";
 
 import { ROUTES } from '../utils/consts'
-import MonthCostsGraphs from './MonthCostsGraphs.jsx'
-import RTL from './RTL.jsx'
-import PageTitle from './PageTitle.jsx'
+import MonthCostsGraphs from './CategoriesInMonthPage.jsx'
+import RTL from './hoc/RTL.jsx'
+import PageTitle from './buildingBlocks/PageTitle.jsx'
 import Transactions from './TransactionsPage.jsx'
 import TransactionsAutoTags from './AutoTagPage.jsx'
 import TransactionsUpdateMulti from './UpdateMultiPage.jsx'
@@ -141,7 +141,7 @@ const mapDispatchToProps = (dispatch) => ({
     signOut: () => dispatch(signOut())
 });
 
-class App2 extends React.Component {
+class App extends React.Component {
     constructor(props) {
         super(props);
 
@@ -282,4 +282,4 @@ class App2 extends React.Component {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(App2));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(App));

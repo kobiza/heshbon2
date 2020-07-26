@@ -1,7 +1,7 @@
 import React from 'react';
 import {withRouter} from "react-router-dom";
 import Typography from "@material-ui/core/Typography";
-import {ROUTES} from "../utils/consts";
+import {ROUTES} from "../../utils/consts";
 
 class PageTitle extends React.Component {
     render() {

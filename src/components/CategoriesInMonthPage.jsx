@@ -8,7 +8,7 @@ import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField/TextField";
 import Paper from "@material-ui/core/Paper/Paper";
 import { withStyles } from '@material-ui/core/styles';
-import Graph1 from "./customGraphs/Graph1.jsx";
+import CategoriesInMonthGraph from "./customGraphs/CategoriesInMonthGraph.jsx";
 
 const styles = theme => ({
     paper: {
@@ -40,7 +40,7 @@ const toMonthInputDateFormat = (date) => {
     return `${year}-${month}`
 }
 
-class MonthCostsGraphs extends Component {
+class CategoriesInMonthPage extends Component {
     constructor(props) {
         super(props);
 
@@ -96,7 +96,7 @@ class MonthCostsGraphs extends Component {
                         </Grid>
                     </Grid>
                 </Paper>
-                <Graph1 transactions={filteredTransactions} style={{width: '100%', height: '300px'}}/>
+                <CategoriesInMonthGraph transactions={filteredTransactions} style={{width: '100%', height: '300px'}}/>
 
                 <TransactionsGrid transactions={filteredTransactions}/>
             </div>
@@ -104,4 +104,4 @@ class MonthCostsGraphs extends Component {
     }
 }
 
-export default connect(mapStateToProps)(withStyles(styles)(MonthCostsGraphs));
+export default connect(mapStateToProps)(withStyles(styles)(CategoriesInMonthPage));

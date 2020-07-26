@@ -44,7 +44,7 @@ const getTransactionCategory = t => {
     return 'unknown'
 }
 
-export default class Graph1 extends Component {
+export default class CategoriesInMonthGraph extends Component {
 
     render() {
         const transactionsInMonth = _.groupBy(this.props.transactions, getTransactionMonth)
