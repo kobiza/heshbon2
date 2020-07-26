@@ -9,6 +9,7 @@ import TextField from "@material-ui/core/TextField/TextField";
 import Paper from "@material-ui/core/Paper/Paper";
 import { withStyles } from '@material-ui/core/styles';
 import CategoriesInMonthGraph from "./customGraphs/CategoriesInMonthGraph.jsx";
+import TagDataLists from "./buildingBlocks/TagDataLists.jsx";
 
 const styles = theme => ({
     paper: {
@@ -70,6 +71,7 @@ class CategoriesInMonthPage extends Component {
 
         return (
             <div className="graphs-page">
+                <TagDataLists/>
                 <Paper className={classes.paper}>
                     <Grid container spacing={3}>
                         <Grid item xs={12} sm={3}>
