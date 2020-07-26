@@ -8,7 +8,6 @@ import {
 } from "react-router-dom";
 
 import { ROUTES } from '../utils/consts'
-import FixedAndVariableCostsGraphs from './FixedAndVariableCostsGraphs.jsx'
 import MonthCostsGraphs from './MonthCostsGraphs.jsx'
 import RTL from './RTL.jsx'
 import PageTitle from './PageTitle.jsx'
@@ -34,7 +33,6 @@ import FastForwardIcon from '@material-ui/icons/FastForward';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import TrendingUpIcon from '@material-ui/icons/TrendingUp';
 import FormatListNumberedRtlIcon from '@material-ui/icons/FormatListNumberedRtl';
 import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 import BarChartIcon from '@material-ui/icons/BarChart';
@@ -171,9 +169,6 @@ class App2 extends React.Component {
         const link1 = React.forwardRef((linkProps, ref) => (
             <Link ref={ref} to="/" {...linkProps} />
         ))
-        const link2 = React.forwardRef((linkProps, ref) => (
-            <Link ref={ref} to="/fixedAndVariableCostsGraphs" {...linkProps} />
-        ))
         const link3 = React.forwardRef((linkProps, ref) => (
             <Link ref={ref} to="/monthCostsGraphs" {...linkProps} />
         ))
@@ -232,15 +227,15 @@ class App2 extends React.Component {
                                     </ListItemIcon>
                                     <ListItemText primary={ROUTES["/"]} />
                                 </ListItem>
-                                <ListItem button className={classes.menuItem} component={link2}>
-                                    <ListItemIcon>
-                                        <BarChartIcon />
-                                    </ListItemIcon>
-                                    <ListItemText primary={ROUTES["/fixedAndVariableCostsGraphs"]} />
-                                </ListItem>
+                                {/*<ListItem button className={classes.menuItem} component={link2}>*/}
+                                {/*    <ListItemIcon>*/}
+                                {/*        <TrendingUpIcon />*/}
+                                {/*    </ListItemIcon>*/}
+                                {/*    <ListItemText primary={ROUTES["/trendingUpIcon"]} />*/}
+                                {/*</ListItem>*/}
                                 <ListItem button className={classes.menuItem} component={link3}>
                                     <ListItemIcon>
-                                        <TrendingUpIcon />
+                                        <BarChartIcon />
                                     </ListItemIcon>
                                     <ListItemText primary={ROUTES["/monthCostsGraphs"]} />
                                 </ListItem>
@@ -263,9 +258,6 @@ class App2 extends React.Component {
                         <div className={classes.appBarSpacer} />
                         <Container maxWidth="lg" className={classes.container}>
                             <Switch>
-                                <Route path="/fixedAndVariableCostsGraphs">
-                                    {this.props.authData && <FixedAndVariableCostsGraphs/>}
-                                </Route>
                                 <Route path="/monthCostsGraphs">
                                     {this.props.authData && <MonthCostsGraphs/>}
                                 </Route>

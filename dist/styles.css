@@ -15,6 +15,12 @@ input::-webkit-calendar-picker-indicator {
 }
 
 
+/*recharts*/
+
+.recharts-surface {
+    margin-left: 4px;
+}
+
 
 /*master*/
 header {

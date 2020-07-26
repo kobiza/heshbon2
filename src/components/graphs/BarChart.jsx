@@ -26,7 +26,7 @@ export default class MyBarChart extends PureComponent {
                     <XAxis dataKey={this.props.groupKey} reversed={true} />
                     <YAxis orientation="right"/>
                     <Tooltip />
-                    <Legend/>
+                    <Legend wrapperStyle={{direction: 'rtl'}}/>
                     {getBars(this.props)}
                 </BarChart>
             </ResponsiveContainer>
