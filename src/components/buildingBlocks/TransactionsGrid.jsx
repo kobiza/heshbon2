@@ -1,5 +1,6 @@
 import React from 'react';
 import TagsInput from './TagsInput.jsx'
+import TagDataLists from './TagDataLists.jsx'
 import Paper from "@material-ui/core/Paper/Paper";
 import Table from "@material-ui/core/Table";
 import TableHead from "@material-ui/core/TableHead";
@@ -57,6 +58,7 @@ class TransactionsGrid extends React.Component {
 
         return (
             <div>
+                { !isTagsReadOnly && <TagDataLists/>}
                 <TableContainer component={Paper}>
                     <Table >
                         <TableHead>

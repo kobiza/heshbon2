@@ -1,4 +1,5 @@
 import _ from "lodash";
+import {TAGS_DISPLAY_NAMES} from './consts'
 
 // 'dd/mm/yyyy' -> 'yyyy-mm'
 const toInputMonthFormat = (dbDate) => {
@@ -46,3 +47,6 @@ const getDate = (transaction) => {
 export const sortByDate = (transactions) => {
     return _.sortBy(transactions, getDate)
 }
+
+export const isUnknown = (transaction) => transaction.tags.length === 1 & transaction.tags[0] === TAGS_DISPLAY_NAMES.unknown
+

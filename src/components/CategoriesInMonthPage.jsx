@@ -23,8 +23,6 @@ const styles = theme => ({
     },
 })
 
-const getTransactionMonth = t => t.date.slice(-7)
-
 function mapStateToProps(state) {
     return {
         transactions: state.transactions

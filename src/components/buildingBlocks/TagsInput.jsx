@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Chip from '@material-ui/core/Chip';
 import {withStyles} from "@material-ui/core";
-import clsx from "clsx";
+import {DISPLAY_NAME_TO_TAG_KEY} from '../../utils/consts'
 
 const styles = (theme) => ({
     tags: {
@@ -49,6 +49,10 @@ class TagsInput extends React.Component {
 
         const chipColor = propsChipColor || (isReadOnly ? undefined : 'primary')
 
+        const last = _.last(tags)
+        const tagListKey = last ? DISPLAY_NAME_TO_TAG_KEY[last] : 'root'
+        const listId = `${tagListKey}-tag-list`
+
         return (
             <div className="input-tag">
                 <ul className={classes.tags}>
@@ -58,7 +62,7 @@ class TagsInput extends React.Component {
                         </li>
                     ))}
                     {!this.props.isReadOnly && (
-                        <li className="input-tag-item input-tag-item-input-wrapper"><input tabIndex={this.props.inputTabIndex} type="text" list="tag-list" onKeyDown={this.inputKeyDown} ref={c => { this.tagInput = c; }} /></li>
+                        <li className="input-tag-item input-tag-item-input-wrapper"><input tabIndex={this.props.inputTabIndex} type="text" list={listId} onKeyDown={this.inputKeyDown} ref={c => { this.tagInput = c; }} /></li>
                     )}
 
                 </ul>

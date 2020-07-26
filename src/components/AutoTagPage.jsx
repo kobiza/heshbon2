@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import React from 'react';
 import {connect} from 'react-redux';
-import {filter} from "../utils/transactionsUtils";
+import {filter, isUnknown} from "../utils/transactionsUtils";
 import {
     fetchTransactions,
     updateCardTransactionsAdditionalData,
@@ -75,6 +75,7 @@ function mapDispatchToProps(dispatch) {
         fetchTransactions: () => dispatch(fetchTransactions()),
     };
 }
+
 class AutoTagPage extends React.Component {
     constructor(props) {
         super(props);
@@ -116,7 +117,7 @@ class AutoTagPage extends React.Component {
         }
 
         this.autoTag = () => {
-            const allReadTransactions = this.props.transactions.filter(t => t.isRead)
+            const allReadTransactions = this.props.transactions.filter(t => t.isRead && !isUnknown(t))
             // const allUnreadTransactions = this.props.transactions.filter(t => !t.isRead)
             const allNamesTags = _.reduce(allReadTransactions, (names, t) => {
                 const prevTagsMap = names[t.name] || {}

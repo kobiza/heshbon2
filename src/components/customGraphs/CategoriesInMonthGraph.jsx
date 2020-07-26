@@ -2,7 +2,6 @@ import _ from 'lodash'
 import React, { Component } from 'react';
 import BarChart from '../graphs/BarChart.jsx'
 
-
 const getTransactionMonth = t => t.date.slice(-7)
 const getTransactionCategory = t => {
     const categoriesMap = _.reduce(t.tags, (acc, tag) => {
@@ -12,16 +11,16 @@ const getTransactionCategory = t => {
     }, {})
 
     const hasCategory = (category) => !!categoriesMap[category]
-    
+
+    if (hasCategory('חד פעמי')) {
+        return 'once'
+    }
+
     if (hasCategory('מגורים וחשבונות תקופתיים')) {
         return 'fixed'
     }
 
     if (hasCategory('מחיה וקניות שוטפות')) {
-        if (hasCategory('חד פעמי')) {
-            return 'variable_once'
-        }
-
         return 'variable'
     }
 
@@ -53,7 +52,7 @@ export default class CategoriesInMonthGraph extends Component {
 
             return _.defaults(monthCategories, {
                 'fixed': [],
-                'variable_once': [],
+                'once': [],
                 'variable': [],
                 'car': [],
                 'pleasure': [],
@@ -74,7 +73,7 @@ export default class CategoriesInMonthGraph extends Component {
 
         const tagsColors = {
             'fixed': '#f9ca24',
-            'variable_once': '#ffbe76',
+            'once': '#ffbe76',
             'variable': '#badc58',
             'car': '#686de0',
             'pleasure': '#e056fd',
@@ -116,9 +115,9 @@ export default class CategoriesInMonthGraph extends Component {
                 stackId: 'a'
             },
             {
-                dataKey: 'variable_once',
+                dataKey: 'once',
                 name: 'חד פעמי',
-                color: tagsColors.variable_once,
+                color: tagsColors.once,
                 stackId: 'a'
             },
             {

@@ -10,11 +10,12 @@ import {
 import TextField from '@material-ui/core/TextField';
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper/Paper";
-import { lighten, withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import SaveIcon from '@material-ui/icons/Save';
 import Fab from "@material-ui/core/Fab";
 import Grid from "@material-ui/core/Grid";
 import TransactionsGrid from "./buildingBlocks/TransactionsGrid.jsx";
+import TagDataLists from "./buildingBlocks/TagDataLists.jsx";
 
 const styles = theme => ({
     saveButton: {
@@ -132,6 +133,7 @@ class TransactionsAutoTags extends React.Component {
 
         return (
             <div>
+                <TagDataLists/>
                 <Paper className={classes.paper}>
                     <Grid container spacing={3}>
                         <Grid item xs={12} sm={3}>

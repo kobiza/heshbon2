@@ -135,13 +135,6 @@ class TransactionsPage extends React.Component {
 
         return (
             <div>
-                { this.props.transactions.length > 0 && (
-                    <datalist id="tag-list">
-                        {getTags(this.props.transactions).map(tag => (
-                            <option key={tag}>{tag}</option>
-                        ))}
-                    </datalist>
-                )}
                 <Paper className={classes.paper}>
                     <Grid container spacing={3}>
                         <Grid item xs={12} sm={3}>
