@@ -1,31 +1,28 @@
 import * as _ from 'lodash';
 import React from 'react';
+import classNames from 'classnames'
 import {connect} from 'react-redux';
 import TagsInput from './buildingBlocks/TagsInput.jsx'
-import {filter, sortByDate, getTags} from "../utils/transactionsUtils";
+import {filter, sortByDate} from "../utils/transactionsUtils";
 import {
     fetchTransactions,
     updateCardTransactionsAdditionalData,
 } from '../redux/actions/transactionsActions'
-
-import Table from '@material-ui/core/Table';
-import Grid from '@material-ui/core/Grid';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Fab from '@material-ui/core/Fab';
-import SaveIcon from '@material-ui/icons/Save';
-import Paper from '@material-ui/core/Paper';
+import TextField from '@material-ui/core/TextField';
+import Button from "@material-ui/core/Button";
+import Paper from "@material-ui/core/Paper/Paper";
+import Table from "@material-ui/core/Table";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import TableCell from "@material-ui/core/TableCell/TableCell";
+import TableBody from "@material-ui/core/TableBody";
+import TableContainer from "@material-ui/core/TableContainer";
 import { lighten, withStyles } from '@material-ui/core/styles';
 import clsx from "clsx";
-import TextField from "@material-ui/core/TextField/TextField";
+import SaveIcon from '@material-ui/icons/Save';
+import Fab from "@material-ui/core/Fab";
+import Grid from "@material-ui/core/Grid";
 
-
-//70px 310px 100px 70px 1fr
 const styles = theme => ({
     readColumn: {
         width: 70
@@ -63,8 +60,34 @@ const styles = theme => ({
             padding: theme.spacing(3),
         },
     },
+    suggestButton: {
+        marginTop: 10
+    }
 })
 
+const toTagsMap = (tags) => {
+    return _.reduce(tags, (acc, tag) => {
+        acc[tag] = true
+        return acc
+    }, {})
+}
+
+const joinTagsMap = (prevTags, newTags) => {
+    if (_.isEmpty(prevTags)) {
+        return newTags
+    }
+    if (_.isEmpty(newTags)) {
+        return prevTags
+    }
+    const allTagsMap = {
+        ...prevTags,
+        ...newTags
+    }
+
+    return _.pickBy(_.mapValues(allTagsMap, (v, tagName) => {
+        return prevTags[tagName] && newTags[tagName]
+    }))
+}
 
 function mapStateToProps(state) {
     return {
@@ -78,59 +101,29 @@ function mapDispatchToProps(dispatch) {
         fetchTransactions: () => dispatch(fetchTransactions()),
     };
 }
-
-const formatted2DigitsNumber = number =>  ("0" + number).slice(-2);
-
-const toMonthInputDateFormat = (date) => {
-    const month = formatted2DigitsNumber(date.getMonth() + 1)
-    const year = date.getFullYear()
-
-    return `${year}-${month}`
-}
-
-class Transactions extends React.Component {
+class AutoTagPage extends React.Component {
     constructor(props) {
         super(props);
 
-        const currentDate = new Date()
-        const prev2MonthDate = new Date()
-        prev2MonthDate.setMonth(prev2MonthDate.getMonth() - 2)
-
         this.state = {
             additionalDataUpdates: {},
-            showRead: false,
-            startMonth: toMonthInputDateFormat(prev2MonthDate),
-            endMonth: toMonthInputDateFormat(currentDate),
-            tagsFilter: []
+            isAutoActive: false,
+            startMonth: '',
+            endMonth: '',
+            filteredTransactions: []
         }
 
-        this.togglesSowRead = (showRead) => {
-            this.setState({showRead})
-        }
         this.updateStartMonth = (startMonth) => {
             this.setState({startMonth})
         }
         this.updateEndMonth = (endMonth) => {
             this.setState({endMonth})
         }
-        this.updateTagsFilter = (tagsFilter) => {
-            this.setState({tagsFilter})
-        }
 
-        this.handleDataUpdate = (rowKey, nextAdditionalData, prevAdditionalData, initAdditionalData) => {
-            const {tags: prevTags} = prevAdditionalData
-
-            const newData = {
-                ...nextAdditionalData
-            }
-
-            if (newData.tags.length === 1 && prevTags.length === 0 && !newData.isRead) {
-                newData.isRead = true
-            }
-
+        this.handleDataUpdate = (rowKey, nextAdditionalData, initAdditionalData) => {
             const additionalDataUpdates = {
                 ...this.state.additionalDataUpdates,
-                [rowKey]: _.isEqual(newData, initAdditionalData) ? {} : newData
+                [rowKey]: _.isEqual(nextAdditionalData, initAdditionalData) ? {} : nextAdditionalData
             }
             this.setState({additionalDataUpdates})
         }
@@ -147,6 +140,40 @@ class Transactions extends React.Component {
 
             _.forEach(cardsTransactionsToUpdate, (cardAdditionalData, cardKey) => updateCardTransactionsAdditionalData(cardKey, cardAdditionalData))
         }
+
+        this.autoTag = () => {
+            const allReadTransactions = this.props.transactions.filter(t => t.isRead)
+            // const allUnreadTransactions = this.props.transactions.filter(t => !t.isRead)
+            const allNamesTags = _.reduce(allReadTransactions, (names, t) => {
+                const prevTagsMap = names[t.name] || {}
+                const newTagsMap = toTagsMap(t.tags)
+                names[t.name] = joinTagsMap(prevTagsMap, newTagsMap)
+
+                return names;
+            }, {})
+
+            const allNamesTagsArr = _.mapValues(allNamesTags, tagsMap => _.keys(tagsMap))
+
+            const additionalDataUpdates = _.reduce(this.state.filteredTransactions, (acc, t) => {
+                const tagsToAdd = allNamesTagsArr[t.name]
+                if (tagsToAdd) {
+                    const key = `${t.cardKey}-${t.transactionIndex}`
+
+                    acc[key] = {tags: tagsToAdd, isRead: true}
+                }
+
+                return acc
+            }, {})
+
+            this.setState({additionalDataUpdates, isAutoActive: true})
+        }
+
+        this.filter = () => {
+            const filterOptions = _.pick(this.state, ['startMonth', 'endMonth'])
+            const filteredTransactions = filter(this.props.transactions, {...filterOptions, showRead: false})
+
+            this.setState({filteredTransactions})
+        }
     }
 
     componentWillMount() {
@@ -155,8 +182,7 @@ class Transactions extends React.Component {
 
     render() {
         const { classes } = this.props
-        const filterOptions = _.pick(this.state, ['showRead', 'startMonth', 'endMonth', 'tagsFilter'])
-        const transactionsToShow = sortByDate(filter(this.props.transactions, filterOptions))
+        const transactionsToShow = sortByDate(this.state.filteredTransactions)
 
         const transactions2 = transactionsToShow
             .map((t, index) => {
@@ -174,24 +200,17 @@ class Transactions extends React.Component {
                 const {isRead, tags} = currentAdditionalData
                 return (
                     <TableRow key={key} className={clsx(highlight && classes.highlight)}>
-                        <TableCell align="left"><span><input type="checkbox" tabIndex="-1" checked={isRead} onChange={(event) => this.handleDataUpdate(key, {tags, isRead: event.target.checked}, currentAdditionalData, initAdditionalData)}/></span></TableCell>
+                        <TableCell align="left"><span><input type="checkbox" checked={isRead} onChange={(event) => this.handleDataUpdate(key, {tags, isRead: event.target.checked}, initAdditionalData)}/></span></TableCell>
                         <TableCell align="left"><span>{t.name}</span></TableCell>
                         <TableCell align="left"><span>{t.date}</span></TableCell>
                         <TableCell align="left"><span>{t.amount}</span></TableCell>
-                        <TableCell align="left"><span><TagsInput chipColor={highlight ? 'secondary' : 'primary'} tags={tags} onChange={(_tags) => this.handleDataUpdate(key, {tags: _tags, isRead}, currentAdditionalData, initAdditionalData)}/></span></TableCell>
+                        <TableCell align="left"><span><TagsInput inputTabIndex="-1" tags={tags} onChange={() => {}}/></span></TableCell>
                     </TableRow>
                 )
             })
 
         return (
             <div>
-                { this.props.transactions.length > 0 && (
-                    <datalist id="tag-list">
-                        {getTags(this.props.transactions).map(tag => (
-                            <option key={tag}>{tag}</option>
-                        ))}
-                    </datalist>
-                )}
                 <Paper className={classes.paper}>
                     <Grid container spacing={3}>
                         <Grid item xs={12} sm={3}>
@@ -208,27 +227,19 @@ class Transactions extends React.Component {
                                 value={this.state.endMonth} onChange={event => this.updateEndMonth(event.target.value)}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={12}>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={this.state.showRead} onChange={event => this.togglesSowRead(event.target.checked)}
-                                        name="checkedB"
-                                        color="primary"
-                                    />
-                                }
-                                label="נקראו"
-                            />
+                        <Grid item xs={12} sm={6}>
+                            <Button className={classes.suggestButton} variant="contained" color="primary" onClick={this.filter}>
+                                חפש
+                            </Button>
                         </Grid>
-                        <Grid item xs={12} sm={12}>
-                            <div className="input-box with-top-label">
-                                <label className="date-label">קטגוריות</label>
-                                <TagsInput tags={this.state.tagsFilter} onChange={this.updateTagsFilter}/>
-                            </div>
+                        <Grid item xs={12} sm={3}>
+                            <Button className={classes.suggestButton} variant="contained" color="primary" onClick={this.autoTag}>
+                                הצע
+                            </Button>
                         </Grid>
                     </Grid>
                 </Paper>
-                {this.props.transactions.length > 0 && (
+                <ul className="transactions">
                     <TableContainer component={Paper}>
                         <Table >
                             <TableHead>
@@ -245,7 +256,7 @@ class Transactions extends React.Component {
                             </TableBody>
                         </Table>
                     </TableContainer>
-                )}
+                </ul>
                 <Fab
                     color="secondary"
                     aria-label="save"
@@ -254,10 +265,9 @@ class Transactions extends React.Component {
                 >
                     <SaveIcon className={classes.extendedIcon} />
                 </Fab>
-                {/*<button className="action-button" onClick={this.saveChanges}>☁️ שמור</button>*/}
             </div>
         );
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Transactions));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(AutoTagPage));

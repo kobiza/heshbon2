@@ -11,9 +11,9 @@ import { ROUTES } from '../utils/consts'
 import MonthCostsGraphs from './MonthCostsGraphs.jsx'
 import RTL from './RTL.jsx'
 import PageTitle from './PageTitle.jsx'
-import Transactions from './Transactions.jsx'
-import TransactionsAutoTags from './TransactionsAutoTags.jsx'
-import TransactionsUpdateMulti from './TransactionsUpdateMulti.jsx'
+import Transactions from './TransactionsPage.jsx'
+import TransactionsAutoTags from './AutoTagPage.jsx'
+import TransactionsUpdateMulti from './UpdateMultiPage.jsx'
 import {loginWithGoogle, fetchAuthData, signOut} from '../redux/actions/authActions'
 import clsx from 'clsx';
 import { createMuiTheme, ThemeProvider, withStyles } from '@material-ui/core/styles';
