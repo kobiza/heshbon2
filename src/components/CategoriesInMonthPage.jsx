@@ -95,7 +95,7 @@ class CategoriesInMonthPage extends Component {
                         </Grid>
                         <Grid item xs={12} sm={12}>
                             <div className="input-box with-top-label">
-                                <label className="date-label">קטגוריות</label>
+                                <label className="date-label">כולל קטגוריות</label>
                                 <TagsInput tags={this.state.tagsFilter} onChange={this.updateTagsFilter}/>
                             </div>
                         </Grid>
