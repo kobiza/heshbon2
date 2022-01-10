@@ -1,2 +1,1 @@
-# newBoilerplate
-# heshbon2
+# heshbon2 - client side
